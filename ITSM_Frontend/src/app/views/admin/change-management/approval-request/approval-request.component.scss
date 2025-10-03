@@ -1,0 +1,197 @@
+.approval-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    // padding: 20px;
+    background-color: #f9f9f9; /* Light background */
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.title {
+    text-align: center;
+    color: #052c65; /* Title color */
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+}
+
+.approval-grid {
+    display: flex; /* Use flexbox to align cards */
+    flex-direction: column; /* Align cards vertically */
+    gap: 20px; /* Space between cards */
+}
+
+.approval-card {
+    display: flex; /* Make card flex */
+    flex-direction: column; /* Column for header and footer */
+    background-color: white;
+    border-radius: 12px;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    overflow: hidden; /* To avoid content overflow */
+}
+
+.card-header {
+    background-color: #1e4f8a; /* Header color */
+    color: white;
+    // padding: 10px; /* Padding for header */
+    text-align: center;
+}
+
+.card-body {
+    padding: 15px;
+}
+
+.request-detail {
+    display: grid; /* Create a grid for the details */
+    grid-template-columns: repeat(3, 1fr); /* Three columns */
+    gap: 15px; /* Space between items */
+}
+
+.detail-item {
+    display: flex; /* Align key and value flexibly */
+    flex-direction: column; /* Align key on top of value */
+}
+
+.card-footer {
+    background-color: #f8f9fa;
+    border-top: none;
+    padding: 10px;
+    display: flex;
+    justify-content: flex-end;
+}
+.header-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Space between Back Button and Title */
+    // margin-bottom: 20px;
+}
+
+.btn {
+    min-width: 120px;
+    margin-left: 10px;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-approve {
+    background-color: #28a745; /* Green */
+    color: white;
+}
+
+.btn-reject {
+    background-color: #dc3545; /* Red */
+    color: white;
+}
+
+.btn-approve:hover {
+    background-color: #218838; /* Darker green */
+}
+
+.btn-reject:hover {
+    background-color: #c82333; /* Darker red */
+}
+
+.no-requests {
+    text-align: center;
+    color: #6c757d; /* Light gray for the message */
+    margin-top: 20px;
+    font-size: 1.2rem;
+}
+
+.priority-low {
+    color: green; /* Low priority color */
+}
+
+.priority-medium {
+    color: orange; /* Medium priority color */
+}
+
+.priority-high {
+    color: rgb(250, 82, 82); /* High priority color */
+}
+
+.priority-critical {
+    color: darkred; /* Critical priority color */
+}
+   
+
+:host::ng-deep .p-tabview .p-tabview-nav li.p-highlight .p-tabview-nav-link {
+    // border: 1px solid;
+    color: #121111 !important;
+   background-color: rgba(255, 255, 255, 0.898) !important; 
+   border-top-right-radius: 0; 
+    border-bottom-left-radius: 0;
+    border-top-left-radius: 0;
+}
+.reject-form {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+  }
+  
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    display: block;
+  }
+  
+  .form-input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+  
+  .form-input:focus {
+    border-color: #007ad9; /* Highlight color on focus */
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 122, 217, 0.5); /* Soft shadow on focus */
+  }
+  
+  .error-message {
+    color: red;
+    font-size: 0.875em;
+    margin-top: 5px;
+  }
+  
+  .dialog-footer {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+  }
+  
+  .cancel-button {
+    background-color: #f44336; /* Red color for cancel */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 15px;
+    cursor: pointer;
+    margin-right: 10px;
+  }
+  
+  .cancel-button:hover {
+    background-color: #757272; /* Darker red on hover */
+  }
+  
+  .submit-button {
+    background-color: #007ad9; /* Blue color for submit */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 15px;
+    cursor: pointer;
+  }
+  
+  .submit-button:hover {
+    background-color: #005bb5; /* Darker blue on hover */
+  }
+  

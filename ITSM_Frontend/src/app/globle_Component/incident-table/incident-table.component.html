@@ -1,0 +1,53 @@
+<div class="table-container">
+    <!-- Header with sort and filter options -->
+    <div class="table-header">
+        <input
+            type="text"
+            pInputText
+            placeholder="Search..."
+            class="my-1 search-bar p-inputtext p-component"
+        />
+        <div class="table-actions">
+            <p-dropdown [options]="sortOptions" [(ngModel)]="selectedSort" placeholder="Last 7 Days"></p-dropdown>
+            <!-- <button pButton label="New Filter" icon="pi pi-filter"></button> -->
+        </div>
+    </div>
+
+    <!-- Scrollable Table Container -->
+    <div class="scrollable-table-container">
+        <p-table [value]="tickets" class="ticket-table">
+            <ng-template pTemplate="body" let-ticket>
+                <tr class="ticket-row my-4">
+                    <!-- Status Badge -->
+                    <td class="ticket-status">
+                        <span class="ticket-id font-medium">{{ ticket.id }}</span>
+                        <span class="ticket-badge my-2" [ngStyle]="{'background-color': ticket.badgeColor}">{{ ticket.status }}</span>
+                    </td>
+                    <span class="border-circle text-primary cursor-pointer p-2 mt-3">
+                        <i class="pi pi-pen-to-square" style="font-size: 1.3rem"></i>
+                    </span>
+
+                    <!-- Ticket Info -->
+                    <td class="ticket-info">
+                        <div class="ticket-title my-3">
+                            <span class="ticket-title-text">{{ ticket.title }}</span>
+                        </div>
+                        <div class="ticket-details">
+                            <span class="ticket-assignee">Category: {{ ticket.assignee || 'Laptop' }}</span>
+                            <span class="ticket-raised">Item: {{ ticket.raisedBy }}</span>
+                            <span class="ticket-priority">Call Mode: {{ 'Web' }}</span>
+                            <span class="ticket-due">Call Type: {{ 'Request' }}</span>
+                        </div>
+                        <div class="ticket-comments">
+                            <span class="ticket-assignee mr-5">Last Updated: {{ '10-07-2024' }}</span>
+                            <span class="ticket-raised font-semibold">Assign To:
+                                <p-avatar label="V" styleClass="ml-1" [style]="{ 'background-color': ticket.badgeColor, color: '#ffffff' }" shape="circle"></p-avatar>
+                                {{ ticket.raisedBy }}
+                            </span>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>

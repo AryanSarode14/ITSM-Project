@@ -1,0 +1,119 @@
+<div class="px-2">
+  <div class="grid sticky-custom-bg mt-3">
+    <div class="col-12 md:col-6">
+      <div class="flex align-items-center">
+        <p-button
+          class="mr-4"
+          icon="pi pi-chevron-left"
+          label="Back"
+          size="small"
+          severity="primary"
+          onclick="history.back()"
+        ></p-button>
+        <span class="mr-1"
+          ><i
+            class="pi pi-home cursor-pointer mr-1"
+            [routerLink]="['/home']"
+          ></i>
+          <i class="pi pi-chevron-right"></i
+        ></span>
+        <span class="head">Assigned Asset List</span>
+      </div>
+    </div>
+    <div class="col-12 md:col-6"></div>
+  </div>
+  <div class="grid mt-3">
+    <div class="col-12">
+      <p-dataView #dv [value]="assetListData" [layout]="layout">
+        <ng-template pTemplate="header">
+          <div class="flex align-items-center justify-content-between gap-2">
+            <span class="p-input-icon-right">
+              <i class="pi pi-search"></i>
+              <input
+                pInputText
+                type="text"
+                (input)="onInputChange($event)"
+                placeholder="Search..."
+              />
+            </span>
+            <span>
+              <span class="mr-2">
+                Name:
+                <p-tag
+                  value="{{
+                    parsedUserData.firstName + ' ' + parsedUserData.lastName
+                  }}"
+                  severity="success"
+                ></p-tag>
+              </span>
+            </span>
+          </div>
+        </ng-template>
+        <ng-template let-product pTemplate="listItem">
+          <div class="col-12">
+            <div
+              class="flex flex-column xl:flex-row xl:align-items-start p-2 gap-4"
+            >
+              <div
+                class="flex flex-column sm:flex-row justify-content-between align-items-center xl:align-items-start flex-1 gap-4"
+              >
+                <div
+                  class="flex flex-column align-items-center sm:align-items-start gap-3"
+                >
+                  <!-- <p-rating [ngModel]="product.rating" [readonly]="true" [cancel]="false"></p-rating> -->
+                  <div class="flex align-items-center gap-3">
+                    <span class="flex align-items-center gap-2">
+                      <i class="pi pi-desktop"></i>
+                      <span class="font-bold text-900"
+                        >Asset name: {{ product.asset_name }}</span
+                      >
+                      <button
+                      *ngIf="product.status=='Active'?true:false"
+                      type="button"
+                      pButton
+                      icon="pi pi-send"
+                      class="p-button-text p-button-rounded p-button-info custom-view-button"
+                      pTooltip="Surrender Asset"
+                      tooltipPosition="right"
+                      (click)="surrenderAsset(product)"
+                    ></button>
+                    </span>
+                   
+  
+                  </div>
+                  <div class="flex align-items-center gap-3">
+                    <span class="font-bold text-900">
+                      Serial Number: {{ product.asset_serial_no }}</span
+                    >
+                  </div>
+                </div>
+                <div class="flex flex-column align-items-center gap-3 py-5">
+                 
+                </div>
+                <div
+                  class="flex sm:flex-column align-items-center sm:align-items-end gap-3 sm:gap-2"
+                >
+                <span class="mr-2 font-bold text-900">
+                  Status:
+                  <p-tag
+                    value="{{ product.status }}"
+                    severity="info"
+                  ></p-tag>
+         
+                </span>
+                
+                  <span class="font-bold text-900"
+                    >Assigned Date:
+                    {{ product.assigned_date | date : "dd/MM/yyyy" }}</span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+      </p-dataView>
+     
+    </div>
+  </div>
+  <p-scrollTop [threshold]="100" icon="pi pi-angle-double-up"></p-scrollTop>
+</div>

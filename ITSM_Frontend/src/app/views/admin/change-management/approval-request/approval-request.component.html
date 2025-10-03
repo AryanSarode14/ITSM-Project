@@ -1,0 +1,178 @@
+<div class="approval-container">
+    <div class="header-container">
+        <h1 class="title">Approval Requests</h1>
+        <p-button label="Back" icon="pi pi-arrow-left" class="btn-back" severity="secondary" routerLink="/admin/change-management"></p-button>
+    </div>
+    <div>   
+        <p-tabView styleClass="tabview-custom">
+            <!-- Approved Tab -->
+            <p-tabPanel>
+                
+              <ng-template pTemplate="header" >
+                <span (click)="onTabChange('Approved')">
+
+                    <i class="pi pi-check-circle pr-2"></i>
+                    <span >Approved</span> <!-- Trigger Approved requests -->
+                </span>
+              </ng-template>
+            </p-tabPanel>
+            
+            <!-- Pending Tab -->
+            <p-tabPanel >
+              <ng-template pTemplate="header" >
+                <span (click)="onTabChange('Pending')">
+
+                    <i class="pi pi-clock pr-2"></i>
+                    <span >Pending</span> <!-- Trigger Pending requests -->
+                </span>
+              </ng-template>
+            </p-tabPanel>
+            
+            <!-- Rejected Tab -->
+            <p-tabPanel>
+              <ng-template pTemplate="header">
+                <span (click)="onTabChange('Rejected')">
+
+                    <i class="pi pi-times-circle pr-2"></i>
+                    <span  >Rejected</span> <!-- Trigger Rejected requests -->
+                </span>
+              </ng-template>
+            </p-tabPanel>
+          </p-tabView>
+</div>
+    <div class="approval-grid">
+        <!-- Loop through approval requests -->
+        <div class="approval-card" *ngFor="let request of approvalRequests">
+            <div class="card-header">
+                <h4>Approval Request Initiated by <u>{{ request?.created_by_username }}</u> </h4>
+
+            </div>
+            <div class="card-body">
+                <div class="request-detail">
+                    
+                    <div class="detail-item">
+                        <strong>Affected Product:</strong>
+                        <span>{{ request?.affected_product_name }}</span>
+                    </div>
+                    <div class="detail-item">
+                        <strong>Change Type:</strong>
+                        <span>{{ request?.change_type }}</span>
+                    </div>
+                
+                    <div class="detail-item">
+                        <strong>Implementation Plan:</strong>
+                        <span>{{ request?.implementation_plan }}</span>
+                    </div>
+                    <div class="detail-item">
+                        <strong>Impact Level:</strong>
+                        <span>{{ request?.impact_level }}</span>
+                    </div>
+                 
+                    <div class="detail-item">
+                        <strong>Scheduled Start Date:</strong>
+                        <span>{{ request?.scheduled_start_date }}</span>
+                    </div>
+                    <div class="detail-item">
+                        <strong>Scheduled End Date:</strong>
+                        <span>{{ request?.scheduled_end_date }}</span>
+                    </div>
+                    <div class="detail-item">
+                        <strong>Risk Assessment:</strong>
+                        <span>{{ request?.risk_assessment }}</span>
+                    </div>
+                    <div class="detail-item">
+                        <strong>Priority:</strong>
+                        <span [ngClass]="{
+                            'priority-low': request?.priority_name === 'Low',
+                            'priority-medium': request?.priority_name === 'Medium',
+                            'priority-high': request?.priority_name === 'High',
+                            'priority-critical': request?.priority_name === 'Critical'
+                        }">
+                           <b> {{ request?.priority_name }}</b>
+                        </span>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <strong>Review Date:</strong>
+                        <span>{{ request?.review_date }}</span>
+                    </div>
+                </div>
+                <div class="detail-item">
+                    <strong>Description:</strong>
+                    <span>{{ request?.description }}</span>
+                </div>
+            </div>
+
+          
+            <div class="card-footer">
+                <!-- Conditional logic for approval state -->
+                <ng-container *ngIf="request?.approvers[0]?.approval_state === 'Approved'; else checkRejected">
+                    <p-message severity="info" text="This request has already been approved." icon="pi pi-check"></p-message>
+                </ng-container>
+            
+                <!-- Check if rejected -->
+                <ng-template #checkRejected>
+                    <ng-container *ngIf="request?.approvers[0]?.approval_state === 'Rejected'; else buttons">
+                        <p-message severity="error" text="This request has been rejected." icon="pi pi-times"></p-message>
+                    </ng-container>
+                </ng-template>
+            
+                <!-- Button for non-approved and non-rejected requests -->
+                <ng-template #buttons>
+                    <button class="btn btn-approve" (click)="openRejectDialog(request.id,'approve')">Approve</button>
+                    <button class="btn btn-reject" (click)="openRejectDialog(request.id,'reject')">Reject</button>
+                </ng-template>
+            </div>
+            
+        </div>
+
+        <!-- No requests available message -->
+        <div *ngIf="approvalRequests.length === 0" class="no-requests">
+            <p>No approval requests at the moment.</p>
+        </div>
+    </div>
+</div>
+
+
+<p-dialog
+  header="Reason for Rejection"
+  [(visible)]="rejectDialogVisible"
+  [modal]="true"
+  [closable]="false"
+  [style]="{ width: '400px' }"
+>
+<form [formGroup]="approvalFormData" (ngSubmit)="submitRejection()" class="reject-form">
+    <div class="form-group">
+      <label for="reason">Reason:</label>
+      <textarea
+        id="reason"
+      formControlName="reason"
+        name="reason"
+        required
+        placeholder="Enter rejection reason"
+        class="form-input"
+        rows="4"  
+      ></textarea>
+     
+    </div>
+    <footer class="dialog-footer">
+        <button 
+          type="button" 
+          (click)="rejectDialogVisible = false" 
+          pButton 
+          label="Cancel" 
+          class="p-button-text"  
+        ></button>
+        <button 
+          type="submit" 
+          [disabled]="approvalFormData.invalid"
+          [loading]="loadingBtn" 
+          pButton 
+          label="Submit" 
+          class="p-button-primary mx-3" 
+        ></button>
+      </footer>
+      
+  </form>
+  
+</p-dialog>

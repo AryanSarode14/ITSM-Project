@@ -1,0 +1,520 @@
+<div class="px-2">
+    <div class="grid sticky-custom-bg mt-3">
+      <div class="col-12 md:col-6">
+        <div class="flex align-items-center">
+          <p-button
+            class="mr-4"
+            icon="pi pi-chevron-left"
+            label="Back"
+            size="small"
+            severity="primary"
+            onclick="history.back()"
+          ></p-button>
+          <span class="mr-1"
+            ><i
+              class="pi pi-home cursor-pointer mr-1"
+              [routerLink]="['/admin/admin-dashboard']"
+            ></i>
+            <i class="pi pi-chevron-right"></i
+          ></span>
+          <span
+            class="head mr-1 cursor-pointer"
+            [routerLink]="['/admin/end-point-devices']"
+            >End point devices <i class="pi pi-chevron-right"></i
+          ></span>
+          <span class="head mr-1">Device details</span>
+        </div>
+      </div>
+    </div>
+  
+    <div class="grid mt-3">
+      <div class="col-12">
+        <div
+          class="surface-card shadow-3 border-1 border-round border-gray-400 p-2 flex flex-column flex-wrap gap-10"
+        >
+          <div class="col-12">
+            <div class="grid">
+              <div class="col-8">
+                <h2 class="my-0 text-primary">User Information</h2>
+              </div>
+              <div class="col-4">
+                <p-button
+                  label="Command Excecution Interface"
+                  Style="float: right;"
+                  severity="info"
+                  (click)="openCommandInterface()"
+                />
+              </div>
+            </div>
+            <div class="col-4">
+              <p class="my-0">
+                <span class="label">Name:</span>
+                {{ deviceDetails[0].other_info.current_user["full_name"] }} |
+                <span class="label">User Name:</span>
+                {{ deviceDetails[0].other_info.current_user["username"] }}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="grid mt-3">
+        <div class="col-6">
+          <div
+            class="surface-card shadow-3 border-1 border-round border-gray-400 p-2 flex flex-column flex-wrap gap-10"
+          >
+            <div class="grid">
+              <div class="col-6 flex justify-content-start align-items-center">
+                <h2 class="my-0 text-primary">System Information:</h2>
+              </div>
+              <div
+                class="col-12"
+                *ngFor="let info of deviceDetails[0]?.other_info.system_info"
+              >
+                <p class="my-0 select-all">
+                  <span class="label">{{ extractKeys(info)[0] }}:</span>
+                  {{
+                    info[extractKeys(info)[0]] ? info[extractKeys(info)[0]] : "--"
+                  }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="grid">
+            <p-button
+              label="Get Use time of Installed Apps"
+              (click)="showAppsUsageTime(this.deviceDetails[0].deviceObjectID)"
+              severity="info"
+            />&nbsp;&nbsp;&nbsp;&nbsp;
+            <p-button
+              label="Installed Apps"
+              severity="info"
+              (click)="InstalledApps()"
+            />&nbsp;&nbsp;&nbsp;&nbsp;
+            <p-button
+              label="Get Windows Update"
+              severity="info"
+              (click)="getWindowsUpdate()"
+            />
+          </div>
+          <div class="grid mt-3" *ngIf="deviceDetails[0]?.status == 'Online'">
+            <div
+              class="surface-card shadow-3 border-1 border-round border-gray-400 p-2 flex flex-column flex-wrap gap-10"
+            >
+              <div class="grid">
+                <div class="col-12 w-full">
+                  <h1 class="my-0">
+                    Easily connect to a remote device to provide assistance.
+                  </h1>
+                  <br />
+                  <p-button
+                    label="Connect With Agent"
+                    severity="info"
+                    (click)="openQuickAssistCodeDialog()"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="grid mt-3" *ngIf="deviceDetails[0]?.status == 'Online'">
+            <div
+              class="surface-card shadow-3 border-1 border-round border-gray-400 p-2 flex flex-column flex-wrap gap-10"
+            >
+              <div class="grid">
+                <div class="col-12 w-full">
+                  <h1 class="my-0">Send any required documents to agent.</h1>
+                  <br />
+                  <!-- <p-fileUpload 
+                    mode="basic" 
+                    chooseLabel="Choose File" 
+                    chooseIcon="pi pi-upload"
+                    [customUpload]="true"
+                    [multiple]="false"
+                    accept="image/*,application/pdf,.doc,.docx,.xlsx"  
+                    (change)="onUpload($event)" /> -->
+                  <div
+                    class="panel panel-default mt-2"
+                    *ngIf="selectedFile.length > 0"
+                  >
+                    <div class="panel-body">
+                      <h3 class="label">
+                        {{ selectedFile[0].name }}
+                        <button
+                          (click)="removeSelectedFile(fileInput)"
+                          class="remove-btn pull-right font-medium"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="16"
+                            height="16"
+                            fill="currentColor"
+                            class="bi bi-x-circle-fill"
+                            viewBox="0 0 16 16"
+                          >
+                            <path
+                              d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"
+                            />
+                          </svg>
+                        </button>
+                      </h3>
+                    </div>
+                  </div>
+                  <!-- <div class="" [innerHTML]="result" style="cursor: pointer"> -->
+                  <div class="file-upload-container">
+                    <label for="fileInput" class="file-label">Choose File</label>
+                    <input
+                      id="fileInput"
+                      type="file"
+                      #fileInput
+                      multiple="false"
+                      accept="image/*,application/pdf,.doc,.docx,.xlsx"
+                      (change)="onFileSelected($event)"
+                      Style="display: none;"
+                    />
+                    <p-button
+                      type="button"
+                      (click)="uploadFile()"
+                      [disabled]="selectedFile.length == 0"
+                      icon="pi pi-send"
+                      severity="info"
+                    >
+                    </p-button>
+                    <!-- <button
+                        (click)="uploadFile()"
+                        class="upload-button"
+                        [disabled]="!selectedFile"
+                      >
+                        Upload
+                      </button> -->
+                  </div>
+                  <!-- <label class="custom-file-upload">
+                      <input
+                      class="label"
+                      style="display: none"
+                      type="file"
+                      (change)="onUpload($event)"
+                      #fileInput
+                      multiple="false"
+                      accept="image/*,application/pdf,.doc,.docx,.xlsx"
+                    />
+                  </div>
+                    </label>
+                   
+                  <p-button
+                    type="button"
+                    (click)="fileInput.click()"
+                    class="mt-4"
+                    icon="pi pi-send"
+                    severity="info"
+                  >
+                  </p-button> -->
+                  <!-- </div> -->
+                </div>
+              </div>
+            </div>
+            
+            
+          </div>
+          <div
+              class="grid mt-3 ml-4"
+              *ngIf="this.deviceDetails[0].status=='Offline'"
+            >
+              <div
+                class="surface-card shadow-3 border-1 border-round border-gray-400 p-2 flex flex-column flex-wrap gap-10"
+              >
+                <div class="grid">
+                  <div class="col-3"></div>
+                  <div class="col-6 w-full text-center">
+                    <h1 class="my-0">Device is disconnected.</h1>
+                    <br />
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      height="7rem"
+                      viewBox="0 0 24 24"
+                      width="7rem"
+                      fill="#B7B7B7"
+                    >
+                      <path d="M0 0h24v24H0V0z" fill="none"></path>
+                      <path
+                        d="M1.41 1.69L0 3.1l1 .99V16c0 1.1.89 2 1.99 2H10v2H8v2h8v-2h-2v-2h.9l6 6 1.41-1.41-20.9-20.9zM2.99 16V6.09L12.9 16H2.99zM4.55 2l2 2H21v12h-2.45l2 2h.44c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2H4.55z"
+                      ></path>
+                    </svg>
+                  </div>
+                  <div class="col-3"></div>
+                </div>
+              </div>
+            </div>
+        </div>
+        <p-dialog
+          [(visible)]="showUsageTime"
+          [style]="{ width: '400px', height: '350px' }"
+          [modal]="true"
+          styleClass="p-fluid"
+        >
+          <p-header>Usage time of Apps for Today</p-header>
+          <ng-template pTemplate="content">
+            <div class="formgrid grid mt-2">
+              <div class="col-12">
+                <h1 class="my-0">
+                  Total Use Time :
+                  {{ totalUseTime }}
+                  Hours
+                </h1>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>App Name</th>
+                      <th>Usage Time(Hours)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let key of getKeys(usageTimePerApp)">
+                      <td>{{ key }}</td>
+                      <td>{{ usageTimePerApp[key] }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </ng-template>
+        </p-dialog>
+        <p-dialog
+          [(visible)]="showInstalledApps"
+          [style]="{ width: '950px', height: '450' }"
+          [modal]="true"
+          styleClass="p-fluid"
+        >
+          <p-header>Installed Apps:</p-header>
+          <ng-template pTemplate="content">
+            <div class="formgrid grid mt-2">
+              <div class="col-12">
+                <p-table
+                  styleClass="mt-3"
+                  [value]="deviceDetails[0].other_info.installed_apps"
+                  #dt
+                  [rows]="10"
+                  [paginator]="true"
+                  [globalFilterFields]="['Version', 'Publisher', 'DisplayName']"
+                  [tableStyle]="{ 'min-width': '75rem' }"
+                  [rowHover]="true"
+                  [rows]="5"
+                  dataKey="id"
+                  [rowsPerPageOptions]="[5, 10, 20]"
+                  [scrollable]="true"
+                  scrollHeight="321px"
+                  currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                  [showCurrentPageReport]="true"
+                >
+                  <ng-template pTemplate="header">
+                    <tr>
+                      <th pSortableColumn="Version" style="min-width: 15rem">
+                        Display Name <p-sortIcon field="Version"></p-sortIcon>
+                      </th>
+                      <th pSortableColumn="Publisher" style="min-width: 10rem">
+                        Publisher <p-sortIcon field="Publisher"></p-sortIcon>
+                      </th>
+                      <th pSortableColumn="DisplayName" style="min-width: 15rem">
+                        Version <p-sortIcon field="DisplayName"></p-sortIcon>
+                      </th>
+                    </tr>
+                  </ng-template>
+                  <ng-template pTemplate="body" let-product>
+                    <tr>
+                      <td>
+                        {{ product.DisplayName ? product.DisplayName : "--" }}
+                      </td>
+                      <td>{{ product.Publisher ? product.Publisher : "--" }}</td>
+                      <td>{{ product.Version ? product.Version : "--" }}</td>
+                    </tr>
+                  </ng-template>
+                </p-table>
+              </div>
+            </div>
+          </ng-template>
+        </p-dialog>
+        <p-dialog
+          [(visible)]="showWindowsUpdate"
+          [style]="{ width: '1000px', height: '450' }"
+          [modal]="true"
+          styleClass="p-fluid"
+        >
+          <p-header>Windows Update:</p-header>
+          <ng-template pTemplate="content">
+            <div class="formgrid grid mt-2">
+              <div class="col-12">
+                <p-table
+                  styleClass="mt-3"
+                  [value]="windowsUpdate"
+                  #dt
+                  [rows]="10"
+                  [paginator]="true"
+                  [globalFilterFields]="['Version', 'Publisher', 'DisplayName']"
+                  [tableStyle]="{ 'min-width': '75rem' }"
+                  [rowHover]="true"
+                  [rows]="5"
+                  dataKey="id"
+                  [rowsPerPageOptions]="[5, 10, 20]"
+                  [scrollable]="true"
+                  scrollHeight="321px"
+                  currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                  [showCurrentPageReport]="true"
+                >
+                  <ng-template pTemplate="header">
+                    <tr>
+                      <th pSortableColumn="HotFixID" style="min-width: 15rem">
+                        HotFixID <p-sortIcon field="HotFixID"></p-sortIcon>
+                      </th>
+                      <th pSortableColumn="Description" style="min-width: 10rem">
+                        Description <p-sortIcon field="Description"></p-sortIcon>
+                      </th>
+                      <th pSortableColumn="InstalledBy" style="min-width: 15rem">
+                        Installed By <p-sortIcon field="InstalledBy"></p-sortIcon>
+                      </th>
+                      <th pSortableColumn="InstalledOn" style="min-width: 15rem">
+                        Installed On <p-sortIcon field="InstalledOn"></p-sortIcon>
+                      </th>
+                    </tr>
+                  </ng-template>
+                  <ng-template pTemplate="body" let-product>
+                    <tr>
+                      <td>{{ product.HotFixID }}</td>
+                      <td>{{ product.Description }}</td>
+                      <td>{{ product.InstalledBy }}</td>
+                      <td>{{ product.InstalledOn.DateTime }}</td>
+                    </tr>
+                  </ng-template>
+                </p-table>
+              </div>
+            </div>
+          </ng-template>
+        </p-dialog>
+        <p-dialog
+          [(visible)]="showQuickAssistCodeDialog"
+          [style]="{ width: '430px', height: '280' }"
+          [modal]="true"
+          styleClass="p-fluid"
+        >
+          <p-header>Quick Assist Code:</p-header>
+          <ng-template pTemplate="content">
+            <div class="formgrid grid mt-2">
+              <div class="col-12">
+                <div class="col-12 md:col-12 px-2 py-3 mt-2">
+                  <span class="p-float-label">
+                    <input
+                      id="username"
+                      type="text"
+                      pInputText
+                      [(ngModel)]="code"
+                      autocomplete="off"
+                    />
+  
+                    <label
+                      >Enter a Quick Assist Code to connect with device<span
+                        class="required-asterisk"
+                        >*</span
+                      ></label
+                    >
+                  </span>
+                </div>
+                <!-- Enter a Quick Assist Code to connect with device -->
+              </div>
+            </div>
+          </ng-template>
+          <ng-template pTemplate="footer">
+            <p-button
+              class="mr-4"
+              icon="pi pi-times"
+              label="Cancel"
+              size="small"
+              severity="secondary"
+              (click)="hideDialog1()"
+            ></p-button>
+            <p-button
+              icon="pi pi-check"
+              label="Ok"
+              size="small"
+              severity="primary"
+              (click)="connectWithAgent(code)"
+            ></p-button>
+          </ng-template>
+        </p-dialog>
+        <p-dialog
+          [(visible)]="showCommandlineInterface"
+          [style]="{ width: '800px', height: '350px' }"
+          [modal]="true"
+          styleClass="p-fluid"
+        >
+          <p-header>Remote System Command Center</p-header>
+          <!-- <h2>Issue and manage CMD commands on Agent's Windows systems.</h2> -->
+          <ng-template pTemplate="content">
+            <!-- <h2>Issue and manage CMD commands on Agent's Windows systems.</h2> -->
+            <div class="grid mt-1">
+              <div class="col-12 container-fluid">
+                <p-card Style="height:400px;">
+                  <ng-template pTemplate="header">
+                    <div class="custom-card-header">
+                      <div class="grid">
+                        <div class="col-11">
+                          Issue and manage CMD commands on Agent's Windows
+                          systems.
+                        </div>
+                        <div class="col-1">
+                          <p-button
+                            type="button"
+                            (click)="clear()"
+                            icon="pi pi-times"
+                            [rounded]="true"
+                            severity="secondary"
+                          >
+                          </p-button>
+                        </div>
+                      </div>
+                    </div>
+                  </ng-template>
+                  <div *ngFor="let file of commandResult">
+                    <p>
+                      <strong>{{ file.date }} {{ file.time }} {{ file.type }} {{ file.size }} {{ file.name }}</strong>
+                    </p>
+                  </div>
+                  <p>
+                    <!-- <strong>{{ commandResult }}</strong> -->
+                  </p>
+                </p-card>
+              </div>
+            </div>
+            <div class="grid mt-2">
+              <div class="col-10 md:col-10 px-2 py-3 mt-2">
+                <span class="p-float-label">
+                  <input
+                    id="username"
+                    type="text"
+                    pInputText
+                    [(ngModel)]="message"
+                    autocomplete="off"
+                  />
+                  <label
+                    >Enter a message<span class="required-asterisk"
+                      >*</span
+                    ></label
+                  >
+                </span>
+              </div>
+              <div class="col-2 md:col-2 px-2 py-3 mt-2">
+                <p-button
+                  type="button"
+                  (click)="sendMessage()"
+                  class="mt-4"
+                  label="Enter"
+                  severity="info"
+                >
+                </p-button>
+              </div>
+            </div>
+          </ng-template>
+          <ng-template pTemplate="footer"> </ng-template>
+        </p-dialog>
+      </div>
+    </div>
+  </div>
+  

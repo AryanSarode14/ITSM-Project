@@ -1,0 +1,294 @@
+<span>
+  <div
+    class="mb-3 pt-3 flex align-items-center justify-content-between flex-wrap"
+  >
+    <!-- Breadcrumb and Title -->
+    <div class="breadcrumb-container">
+      <i
+        class="pi pi-home cursor-pointer"
+        [routerLink]="['/admin/admin-dashboard']"
+      ></i>
+      <i class="pi pi-chevron-right mx-2"></i>
+      <span class="title font-bold">Configuration Item Master</span>
+    </div>
+
+    <!-- Buttons Container -->
+    <div
+      class="button-group flex align-items-center justify-content-end flex-wrap mt-2 md:mt-0"
+    >
+      <!-- Add Asset Button -->
+      <p-button
+        label="Add CI"
+        icon="pi pi-plus"
+        (click)="openDialouge()"
+        severity="primary"
+        class="mr-2 mb-2 md:mb-0"
+      ></p-button>
+
+      <!-- Bulk Upload Button -->
+      <p-button
+        label="Bulk Upload"
+        icon="pi pi-upload"
+        (click)="showBulkUploadModal = true"
+        severity="secondary"
+        class="mr-2 mb-2 md:mb-0"
+      ></p-button>
+
+      <!-- Bulk Upload Modal -->
+      <p-dialog
+        [(visible)]="showBulkUploadModal"
+        header="Bulk Upload"
+        [modal]="true"
+        [responsive]="true"
+        [style]="{ width: '40vw' }"
+        [baseZIndex]="10000"
+        [closeOnEscape]="true"
+        (onHide)="onCloseBulkUploadModal()"
+      >
+        <div class="p-fluid p-4">
+          <h3 class="text-center mb-4" style="font-weight: bold">
+            Upload Your Excel File
+          </h3>
+
+          <!-- Download Template Button -->
+          <div class="mb-4">
+            <p-button
+              label="Download Excel Template"
+              icon="pi pi-download"
+              (click)="downloadTemplate()"
+              class="w-full"
+              severity="success"
+              [style]="{ 'border-radius': '25px' }"
+            ></p-button>
+          </div>
+
+          <!-- Upload Updated Excel -->
+          <div class="mb-4">
+            <div class="flex align-items-center">
+              <!-- Separate Select File Button -->
+              <p-button
+                label="Select File"
+                icon="pi pi-folder-open"
+                class="mr-2"
+                (click)="fileUploadInput.click()"
+              ></p-button>
+
+              <!-- Hidden Input for File Upload -->
+              <input
+                type="file"
+                #fileUploadInput
+                accept=".xlsx"
+                (change)="onFileSelect($event)"
+                style="display: none"
+              />
+
+              <!-- Display selected file name -->
+              <span *ngIf="selectedFileName" class="ml-2">
+                {{ selectedFileName }}
+              </span>
+            </div>
+            <br />
+
+            <!-- Upload Button -->
+            <p-button
+              label="Upload File"
+              icon="pi pi-upload"
+              class="w-full mt-3"
+              [disabled]="!selectedFileName"
+              (click)="uploadSelectedFile()"
+            ></p-button>
+          </div>
+
+          <!-- Instructions -->
+          <div class="text-center mb-3">
+            <p class="text-muted" style="font-size: 14px">
+              Please ensure your file is formatted correctly. Refer to the
+              template for guidance.
+            </p>
+          </div>
+        </div>
+
+        <!-- Footer Section -->
+        <ng-template pTemplate="footer">
+          <div class="flex justify-content-between">
+            <p-button
+              label="Close"
+              icon="pi pi-times"
+              (click)="showBulkUploadModal = false"
+              severity="secondary"
+              [style]="{ 'border-radius': '25px' }"
+            ></p-button>
+            <p-button
+              label="Help"
+              icon="pi pi-info"
+              (click)="showHelpDialogModal()"
+              severity="info"
+              [style]="{ 'border-radius': '25px' }"
+            ></p-button>
+          </div>
+        </ng-template>
+      </p-dialog>
+
+      <!-- Help Dialog -->
+      <p-dialog
+        [(visible)]="showHelpDialog"
+        header="Help"
+        [modal]="true"
+        [responsive]="true"
+        [style]="{ width: '30vw' }"
+        [baseZIndex]="10000"
+        [closeOnEscape]="true"
+        (onHide)="showHelpDialog = false"
+      >
+        <div class="p-fluid p-4">
+          <p>
+            For detailed instructions on how to format your Excel file, please
+            refer to the template file or contact support.
+          </p>
+        </div>
+      </p-dialog>
+    </div>
+  </div>
+
+  <app-dynamic-table  [data]="ciManagementData" [columns]="columns" (editClicked)="openEditDialogue($event)" #dynamictable></app-dynamic-table>
+
+</span>
+
+
+   
+  
+    
+<p-dialog [(visible)]="ciManagementDialouge" [style]="{ width: '61%', height: '380px' }" [closable]="false" [modal]="true" styleClass="p-fluid">
+  <p-header class="font-medium" *ngIf="!editUserId"  >New CI</p-header>
+  <p-header class="font-medium" *ngIf="editUserId" >Update CI</p-header>
+  <ng-template pTemplate="content">
+    <div class="formgrid grid mt-2">
+      <form [formGroup]="ciFormData" class="grid gap-2">
+        <!-- CI Details -->
+        <div class="col-12 md:col-12 lg:col-12">
+          <p-fieldset legend="CI Details" [toggleable]="true">
+            <div class="grid">
+              <div class="col-12 md:col-4 my-3 p-float-label">
+                <p-dropdown id="user_id" [options]="ownerList" formControlName="user_id" optionValue="user_id" optionLabel="full_name" placeholder="Select an Owner Name" appendTo="body"></p-dropdown>
+                <label for="user_id">Select Owner <span class="required-asterisk">*</span></label>
+              </div>
+
+              <div class="col-12 md:col-4 my-3 p-float-label">
+                <p-dropdown id="ci_service_id" [options]="ServiceNameList" formControlName="ci_service_id" optionValue="service_id" optionLabel="service_name" placeholder="Select a Service" appendTo="body"></p-dropdown>
+                <label for="ci_service_id">Select Service <span class="required-asterisk">*</span></label>
+              </div>
+
+              <div class="col-12 md:col-4 my-3 p-float-label">
+                <input pInputText id="ci_name" formControlName="ci_name" />
+                <label for="ci_name">CI Name <span class="required-asterisk">*</span></label>
+              </div>
+
+              <div class="col-12 md:col-4 my-3 p-float-label">
+                <input pInputText id="ci_description" formControlName="ci_description" />
+                <label for="ci_description">Description <span class="required-asterisk">*</span></label>
+              </div>
+
+              <div class="col-12 md:col-4 my-3 p-float-label">
+                <p-dropdown id="ci_classification_id" [options]="classificationList" formControlName="ci_classification_id" optionValue="ci_classification_id" optionLabel="ci_classification_name" placeholder="Select a Classification" appendTo="body">
+                  <ng-template pTemplate="header">
+                    <div class="p-text-center text-center my-1">
+                      <p-button  type="button" label="Add New " (click)="classificationDialouge()" icon="pi pi-plus" 
+                             ></p-button>
+                    </div>
+                  </ng-template>
+
+
+                </p-dropdown>
+                <label for="ci_classification_id">CI Classification <span class="required-asterisk">*</span></label>
+              </div>
+              
+
+              <p-dialog [(visible)]="CIDialog" [style]="{ width: '30%'}" [closable]="false" [modal]="true" styleClass="p-fluid" appendTo="body">
+  
+                <p-header class="font-medium">New Classification</p-header>
+                <ng-template pTemplate="content">
+                  <div class="formgrid mt-2">
+                    <form [formGroup]="CIFormData">
+                      <!-- CI Details -->
+                      <div class="col-12">
+                        <!-- <p-fieldset legend="Details" [toggleable]="true" styleClass="w-full"> -->
+                          <div class="grid">    
+                            <div class="col-12 md:col-12  p-float-label">
+                              <input pInputText id="ci_classification_name" formControlName="ci_classification_name" />
+                              <label for="ci_classification_name">Add Classification <span class="required-asterisk">*</span></label>
+                            </div>
+              
+                          
+                          </div>
+                        <!-- </p-fieldset> -->
+                      </div>
+                    </form>
+                  </div>
+                </ng-template>
+              
+                <ng-template pTemplate="footer">
+                  <p-button class="mr-4" icon="pi pi-times" label="Cancel" size="small" severity="secondary" (click)="CIDialog=false"></p-button>
+                  <p-button icon="pi pi-check" label="Add" size="small" severity="primary" [disabled]="CIFormData.invalid" (click)="addCI()"  ></p-button>
+                
+                </ng-template>
+              </p-dialog>
+
+
+              <div class="col-12 md:col-4 my-3 p-float-label">
+                <p-dropdown id="ci_category_id" [options]="categoryList" formControlName="ci_category_id" optionValue="ci_category_id" optionLabel="ci_category_name" placeholder="Select a Category" appendTo="body">
+                  <ng-template pTemplate="header">
+                    <div class="p-text-center text-center my-1">
+                      <p-button  type="button" label="Add New " (click)="categoryDialouge()" icon="pi pi-plus" 
+                            ></p-button>
+                    </div>
+                  </ng-template>
+
+                </p-dropdown>
+                <label for="ci_category_id">CI Category</label>
+              </div>
+
+              
+              <p-dialog [(visible)]="categoryDialog" [style]="{ width: '30%'}" [closable]="false" [modal]="true" styleClass="p-fluid" appendTo="body">
+  
+                <p-header class="font-medium">New Category</p-header>
+                <ng-template pTemplate="content">
+                  <div class="formgrid mt-2">
+                    <form [formGroup]="categoryFormData">
+                      <!-- CI Details -->
+                      <div class="col-12">
+                        <!-- <p-fieldset legend="Details" [toggleable]="true" styleClass="w-full"> -->
+                          <div class="grid">    
+                            <div class="col-12 md:col-12  p-float-label">
+                              <input pInputText id="ci_category_name" formControlName="ci_category_name" />
+                              <label for="ci_category_name">Add Category <span class="required-asterisk">*</span></label>
+                            </div>
+              
+                          
+                          </div>
+                        <!-- </p-fieldset> -->
+                      </div>
+                    </form>
+                  </div>
+                </ng-template>
+              
+                <ng-template pTemplate="footer">
+                  <p-button class="mr-4" icon="pi pi-times" label="Cancel" size="small" severity="secondary" (click)="categoryDialog=false"></p-button>
+                  <p-button icon="pi pi-check" label="Add" size="small" severity="primary" [disabled]="categoryFormData.invalid" (click)="addCategory()"  ></p-button>
+                
+                </ng-template>
+              </p-dialog>
+
+
+            </div>
+          </p-fieldset>
+        </div>
+      </form>
+    </div>
+  </ng-template>
+
+  <ng-template pTemplate="footer">
+    <p-button class="mr-4" icon="pi pi-times" label="Cancel" size="small" severity="secondary" (click)="ciManagementDialouge=false"></p-button>
+    <p-button icon="pi pi-check" label="Save" size="small" severity="primary" *ngIf="!editUserId" [disabled]="ciFormData.invalid" (click)="onSubmit()"></p-button>
+    <p-button icon="pi pi-check" label="Update" size="small" severity="primary" *ngIf="editUserId" (click)="onUpdate()"></p-button>
+  </ng-template>
+</p-dialog>

@@ -1,0 +1,21 @@
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .p-table {
+        font-size: 0.75rem;
+        th,
+        td {
+          font-size: 0.75rem;
+        }
+      }
+  
+    }
+  
+    @media (max-width: 576px) {
+  
+    p-dropdown {
+      width: 100%;
+      margin-bottom: 1rem;
+    }
+  }
+    

@@ -1,0 +1,148 @@
+<p-table
+  [value]="filteredData"
+  dataKey="id"
+  [rows]="8"
+  [paginator]="true"
+  #pnl
+  [responsiveLayout]="'scroll'"
+>
+  <ng-template pTemplate="caption">
+    <div class="flex align-items-center justify-content-between flex-wrap">
+      <span>
+        <button
+          type="button"
+          pButton
+          pRipple
+          icon="pi pi-file-excel"
+          class="p-button-success p-button-rounded mr-2 excelbtn"
+          pTooltip="Download XLS"
+          tooltipPosition="bottom"
+          (click)="downloadExcel()"
+        ></button>
+      </span>
+
+      <!-- Multi-Select Dropdown -->
+      <!-- Multi-Select Dropdown -->
+
+      <span class="flex align-items-center justify-content-end gap-3">
+        <input
+          type="text"
+          pInputText
+          placeholder="Search..."
+          class="my-1 search-bar p-inputtext p-component"
+          (input)="onSearch($event)"
+        />
+        <p-multiSelect
+          pTooltip="Table Column Filter"
+          [options]="columnOptions"
+          optionLabel="header"
+          [(ngModel)]="selectedColumns"
+          (onChange)="onColumnSelect()"
+          [showToggleAll]="false"
+          appendTo="body"
+          class="p-mx-2"
+        >
+          <ng-template pTemplate="selectedItems">
+            <span class="pi pi-columns"
+              ><i class="pi pi-table" style="font-size: 1.4rem"></i
+            ></span>
+            <!-- Show the icon for columns -->
+          </ng-template>
+
+          <!-- <ng-template pTemplate="header">
+    <div class="p-text-center">
+      <span class="pi pi-columns" style="font-size: 1.2em;"></span>
+    </div>
+  </ng-template> -->
+        </p-multiSelect>
+      </span>
+    </div>
+  </ng-template>
+
+  <ng-template pTemplate="header">
+    <tr style="text-wrap: nowrap">
+      <th *ngFor="let col of displayedColumns">
+        {{ col.header }}
+      </th>
+      <th *ngIf="showEditButton || showViewButton">Action</th>
+    </tr>
+  </ng-template>
+
+  <ng-template pTemplate="body" let-row>
+    <tr style="text-wrap: nowrap">
+      <td *ngFor="let col of displayedColumns">
+        <ng-container *ngIf="col.field === 'has_access'; else otherFields">
+          <p-inputSwitch
+            [(ngModel)]="row.has_access"
+            (onChange)="onAccessChange(row, $event)"
+            class="p-inputswitch-sm p-mx-2 p-my-1 custom-input-switch"
+            [pTooltip]="row.has_access ? 'Access Granted' : 'No Access'"
+          ></p-inputSwitch>
+        </ng-container>
+        <!-- <ng-template #normalCell>{{ row[col.field] ?? '--' }}</ng-template> -->
+
+        <ng-template #otherFields>
+          <ng-container *ngIf="col.field === 'id'; else normalCell">
+            <!-- Conditional coloring based on approval_state -->
+            <span
+              [ngClass]="{
+                'id-approved': row.approval_state === 'Approved',
+                'id-rejected': row.approval_state === 'Rejected'
+              }"
+            >
+              {{ row[col.field] }}
+            </span>
+          </ng-container>
+        </ng-template>
+        <ng-template #normalCell>
+          <p-confirmPopup />
+          <span *ngIf="row[col.field]?.length > 15; else fullText">
+            {{ row[col.field] | slice : 0 : 15 }}...
+            <!-- Truncate and add ellipsis -->
+            <i
+              pTooltip="{{ row[col.field] }}"
+              tooltipPosition="top"
+              style="
+                color: var(--primary-color);
+                font-size: 0.7rem;
+                cursor: pointer;
+              "
+              class="pi pi-info-circle"
+              (click)="copyText(row[col.field], $event)"
+            ></i>
+          </span>
+          <ng-template #fullText>{{ row[col.field] ?? "--" }}</ng-template>
+        </ng-template>
+      </td>
+      <td *ngIf="showEditButton || showViewButton">
+        <button
+          *ngIf="showEditButton"
+          type="button"
+          pButton
+          icon="pi pi-pencil"
+          class="p-button-text p-button-rounded p-button-info custom-edit-button"
+          pTooltip="Edit"
+          tooltipPosition="right"
+          (click)="onEditClick(row)"
+        ></button>
+        <button
+          *ngIf="showViewButton"
+          type="button"
+          pButton
+          icon="pi pi-eye"
+          class="p-button-text p-button-rounded p-button-info custom-view-button"
+          pTooltip="View"
+          tooltipPosition="right"
+          (click)="onViewClick(row)"
+        ></button>
+       
+      </td>
+    </tr>
+  </ng-template>
+
+  <ng-template pTemplate="emptymessage">
+    <tr>
+      <td colspan="8" style="text-align: center">No data found.</td>
+    </tr>
+  </ng-template>
+</p-table>

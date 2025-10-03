@@ -1,0 +1,353 @@
+/* General Styles */
+.login-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  // background-color: #f0f0f0;
+  background-image: url(../../../../../assets/images/background3.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  background-clip: unset;
+
+
+}
+
+.forgot-password-image {
+  max-width: 97px; /* Set a smaller maximum width for the image */
+  max-height: 150px; /* Set a maximum height to ensure it doesn't get too tall */
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  object-fit: cover;
+  margin: auto;
+}
+
+.login-card {
+  display: flex;
+  max-width: 380px;
+  width: 100%;
+  background-color: rgb(255, 255, 255);
+  border-radius: 15px;
+  box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.322);
+  overflow: hidden;
+}
+.loader{
+  text-align: center;
+}
+
+
+.login-card-left {
+  padding: 40px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  // background-color: rgba(190, 174, 174, 0.253);
+  // background-image: url(../../../../../assets/images/backgroundimage2.png);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  padding-top: 20px;
+  background-color: #dddde945;
+
+}
+.spinner-container {
+  display: flex;
+  justify-content: center; /* Centers the spinner horizontally */
+  align-items: center; /* Centers the spinner vertically */
+  margin: 10px 0; /* Adds some space around the spinner */
+}
+
+
+.input-group {
+  // display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  border: 1px solid #ddd;
+  padding: 14px;
+
+  border-radius: 20px;
+}
+
+.input-group i {
+  margin-right: 10px;
+}
+
+input {
+  border: none;
+  outline: none;
+  width: 100%;
+}
+
+.input-group i.pi {
+  color: blue; /* Change the icon color to blue */
+  font-size: 17px; /* Adjust font size if needed */
+  margin-right: 8px; /* Adds space between icon and input */
+}
+
+
+
+.forgot-password {
+  color: #3b82f6;
+  cursor: pointer;
+  text-align: right; /* Align text to the right */
+  margin-top: 7px; /* Adjust spacing as needed */
+}
+
+.create-account {
+  color: #3b82f6;
+  cursor: pointer;
+}
+
+
+/* For Chatbot */
+#helpdesk {
+  font-family: "Roboto", sans-serif;
+  #helpdesk-popup-button {
+    position: fixed;
+    bottom: 20px;
+    right: 40px;
+    // padding: 10px 20px;
+    border: none;
+    // border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight:700;
+    z-index: 1000;
+    font-weight: bold !important;
+  }
+
+  #helpdesk-popup {
+    position: fixed;
+    bottom: 40px;
+    right: 20px;
+    width: 300px;
+    height: 50vh;
+    min-height: 450px;
+    background-color: #f3eeeef7;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    border-radius: 5px;
+    z-index: 1000;
+    display: none;
+    #helpdesk-popup-header {
+        background-color: #193357;
+      color: white;
+      font-size: 18px;
+      padding: 10px;
+      border-top-left-radius: 5px;
+      border-top-right-radius: 5px;
+      #helpdesk-popup-close-button {
+        float: right;
+        border: none;
+        background-color: transparent;
+        color: #fff;
+        font-size: 14px;
+        cursor: pointer;
+      }
+    }
+    .button-container {
+      display:flex;
+      flex-direction: column;
+      flex-wrap: nowrap; /* Prevents buttons from wrapping to the next line */
+      /* width: 350px; */
+      overflow: hidden; /* Ensures buttons stay within the container */
+      justify-content: space-between; /* Space between buttons */
+    }
+
+    .button-container .p-button {
+      flex: 1; /* Allows buttons to grow to fill the space equally */
+      margin-right: 8px; /* Adjust margin as needed */
+      margin-bottom:1rem;
+      margin-right: 8px;
+    }
+
+    .button-container .p-button:last-child {
+      margin-right: 0; /* Removes margin for the last button */
+    }
+    #helpdesk-popup-body {
+      height: calc(100% - 120px);
+      padding: 10px;
+    }
+    .pi-times {
+        font-size: 1.5rem; /* Adjust icon size if needed */
+      }
+    #helpdesk-popup-footer {
+      background-color: #333;
+      color: white;
+      font-size: 14px;
+      padding: 10px;
+      border-bottom-left-radius: 5px;
+      border-bottom-right-radius: 5px;
+      #helpdesk-popup-input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #fff;
+        border-radius: 5px 5px 0 0;
+        box-sizing: border-box;
+        font-size: 14px;
+      }
+
+      #helpdesk-popup-submit-button {
+        padding: 10px;
+        background-color: #2ca1da;
+        color: #fff;
+        border: none;
+        border-radius: 0 0 5px 5px;
+        cursor: pointer;
+        font-size: 14px;
+      }
+    }
+
+    .messages {
+      height: 100%;
+      overflow-x: hidden;
+      overflow-y:scroll;
+      .message {
+        display: flow-root;
+        width: 100%;
+        .client {
+            background-color: #6493d1;;
+          color: white;
+          padding: 10px;
+          border-radius: 5px;
+          margin-bottom: 10px;
+          display: inline-block;
+          max-width: 80%;
+        }
+
+        .user {
+          border: 0.5px solid #333;
+          background-color: #fff;
+          color: #333;
+          padding: 10px;
+          border-radius: 5px;
+          margin-bottom: 10px;
+          display: inline-block;
+          max-width: 80%;
+          text-align: right;
+          float: right;
+        }
+      }
+    }
+  }
+}
+.message-input-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .message-input-container input {
+    flex: 1;
+  }
+  
+  .message-input-container button {
+    min-width: 3rem;
+  }
+
+
+@keyframes typing {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+@keyframes blink-caret {
+  0%, 100% {
+    border-color: transparent;
+  }
+  50% {
+    border-color: black;
+  }
+}
+.p-button{
+  width: 100%;
+}
+
+/* Mobile Styles */
+@media (max-width: 768px) {
+  .login-card {
+    flex-direction: column;
+  }
+
+  .login-card-left {
+    background-image: none; /* Remove background image for mobile */
+    padding: 20px; /* Adjust padding for mobile */
+  }
+
+  .login-card-right {
+    display: none; /* Hide the right card on mobile */
+  }
+
+  .input-group {
+    margin-bottom: 15px; /* Adjust margin for mobile */
+  }
+
+  .forgot-password {
+    text-align: left; /* Align text to the left for mobile */
+  }
+
+  .animated-text {
+    font-size: 30px; /* Adjust font size for mobile */
+  }
+}
+
+.input-full-width {
+  width: 100%;  /* Ensures the input field takes full width */
+}
+
+.input-group {
+  margin-bottom: 1rem;
+}
+
+.p-input-icon-left {
+  display: flex;
+  align-items: center;
+}
+
+.p-input-icon-left i {
+  margin-right: 0.5rem;
+  color: #999;
+}
+
+.password-input {
+  width: 100%;
+}
+
+.error-message{
+  color: red;
+}
+.button-image{
+  position: fixed;
+  bottom: 35px;
+  right: 45px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+ width: 120px;
+  z-index: 1000;
+
+  animation: 4s linear 0s infinite alternate sun-rise;
+
+}
+
+:host::ng-deep .p-button.p-button-warning {
+  font-weight: 700;
+}
+@keyframes sun-rise {
+  from {
+    /* pushes the sun down past the viewport */
+    transform: translateY(15px);
+  }
+  to {
+    /* returns the sun to its default position */
+    transform: translateY(0);
+  }
+}
+

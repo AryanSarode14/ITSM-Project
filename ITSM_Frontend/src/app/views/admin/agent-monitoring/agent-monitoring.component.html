@@ -1,0 +1,193 @@
+<div class="px-2">
+  <div class="grid sticky-custom-bg mt-3">
+    <div class="col-12 md:col-6">
+      <div class="flex align-items-center">
+        <p-button
+          class="mr-4"
+          icon="pi pi-chevron-left"
+          label="Back"
+          size="small"
+          severity="primary"
+          onclick="history.back()"
+        ></p-button>
+        <span class="mr-1"
+          ><i
+            class="pi pi-home cursor-pointer mr-1"
+            [routerLink]="['/home']"
+          ></i>
+          <i class="pi pi-chevron-right"></i
+        ></span>
+        <span class="head">End point devices</span>
+        <p-button
+          type="button"
+          (click)="downloadAgent()"
+          icon="pi pi-cloud-download"
+          size="small"
+          class="ml-2"
+          label="Download Agent"
+          severity="primary"
+        >
+        </p-button>
+      </div>
+    </div>
+    <div class="col-12 md:col-6"></div>
+  </div>
+  <div class="grid mt-3">
+    <div class="col-12">
+      <p-progressBar
+        *ngIf="isLoading"
+        mode="indeterminate"
+        [style]="{ height: '5px' }"
+      ></p-progressBar>
+      <p-dataView #dv [value]="filteredProducts1" [layout]="layout">
+        <ng-template pTemplate="header">
+          <div class="flex align-items-center justify-content-between gap-2">
+            <span class="p-input-icon-right">
+              <i class="pi pi-search"></i>
+              <input
+                pInputText
+                type="text"
+                (input)="onInputChange($event)"
+                placeholder="Search..."
+              />
+            </span>
+            <span>
+              <span class="mr-2">
+                Online:
+                <p-tag
+                  value="{{ onlineDevicesCount }}"
+                  severity="success"
+                ></p-tag>
+              </span>
+              <span>
+                Offline:
+                <p-tag
+                  value="{{ offlineDevicesCount }}"
+                  severity="danger"
+                ></p-tag>
+              </span>
+            </span>
+            <p-dataViewLayoutOptions></p-dataViewLayoutOptions>
+          </div>
+        </ng-template>
+        <ng-template let-product pTemplate="listItem">
+          <div class="col-12">
+            <div
+              class="flex flex-column xl:flex-row xl:align-items-start p-2 gap-4"
+            >
+              <div
+                class="flex flex-column sm:flex-row justify-content-between align-items-center xl:align-items-start flex-1 gap-4"
+              >
+                <div
+                  class="flex flex-column align-items-center sm:align-items-start gap-3"
+                >
+                  <div class="font-bold text-900">
+                    {{ product.other_info.current_user["full_name"] }}
+                    <i
+                      class="pi pi-map-marker"
+                      style="font-size: 1rem"
+                      title="Get Current Location"
+                      (click)="getLocation(product.connectionGroup)"
+                    ></i>
+                  </div>
+                  <!-- <p-rating [ngModel]="product.rating" [readonly]="true" [cancel]="false"></p-rating> -->
+                  <div class="flex align-items-center gap-3">
+                    <span class="flex align-items-center gap-2">
+                      <i class="pi pi-desktop"></i>
+                      <span class="font-semibold text-900"
+                        >Host name:
+                        {{
+                          product.other_info.system_info[0]["Host Name"]
+                        }}</span
+                      >
+                    </span>
+                    <p-tag
+                      [value]="product.status"
+                      [severity]="getSeverity(product.status)"
+                    ></p-tag>
+                  </div>
+                </div>
+                <div
+                  class="flex sm:flex-column align-items-center sm:align-items-end gap-3 sm:gap-2"
+                >
+                  <span class="font-semibold text-900"
+                    >Last updated:
+                    {{ product.updated_at | date : "dd/MM/yyyy" }}</span
+                  >
+                  <span class="font-semibold text-900"
+                    >Location:{{ product.location }}
+                  </span>
+                  <p-button
+                    severity="secondary"
+                    icon="pi pi-exclamation-circle"
+                    title="Device info"
+                    class="md:align-self-end mb-2"
+                    [rounded]="true"
+                    [routerLink]="[
+                      'agent-details',
+                      product.other_info.unique_id
+                    ]"
+                  ></p-button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+        <ng-template let-product pTemplate="gridItem">
+          <div class="col-12 sm:col-6 lg:col-12 xl:col-4 p-2">
+            <div
+              class="p-2 border-1 surface-card border-round border-gray-400 shadow-2"
+            >
+              <div
+                class="flex flex-wrap align-items-center justify-content-between gap-2"
+              >
+                <span class="flex align-items-center gap-2">
+                  <i class="pi pi-desktop"></i>
+                  <span class="font-semibold my-0 text-900"
+                    >Host name:
+                    {{ product.other_info.system_info[0]["Host Name"] }}</span
+                  >
+                </span>
+                <p-button
+                  severity="secondary"
+                  icon="pi pi-exclamation-circle"
+                  [rounded]="true"
+                  title="Device info"
+                  [routerLink]="[
+                    'agent-details',
+                    product.other_info.unique_id
+                  ]"
+                ></p-button>
+              </div>
+              <div class="flex flex-column align-items-center gap-3 py-5">
+                <div class="font-bold text-900">
+                  {{ product.other_info.current_user["full_name"] }}
+                  <i
+                    class="pi pi-map-marker"
+                    style="font-size: 1rem"
+                    title="Get Current Location"
+                    (click)="getLocation(product.connectionGroup)"
+                  ></i>
+                </div>
+              </div>
+              <div class="flex align-items-center justify-content-between">
+                <span class="font-semibold text-900"
+                  >Last updated:
+                  {{ product.updated_at | date : "dd/MM/yyyy" }}</span
+                >
+                <span class="font-semibold text-900"
+                  >Location:{{ product.location }}
+                </span>
+                <p-tag
+                  [value]="product.status"
+                  [severity]="getSeverity(product.status)"
+                ></p-tag>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+      </p-dataView>
+    </div>
+  </div>
+  <p-scrollTop [threshold]="100" icon="pi pi-angle-double-up"></p-scrollTop>
+</div>

@@ -1,0 +1,1053 @@
+<span>
+  <div
+    class="mb-3 pt-3 flex align-items-center justify-content-between flex-wrap"
+  >
+    <!-- Breadcrumb and Title -->
+    <div class="breadcrumb-container">
+      <i
+        class="pi pi-home cursor-pointer"
+        [routerLink]="['/admin/admin-dashboard']"
+      ></i>
+      <i class="pi pi-chevron-right mx-2"></i>
+      <span class="title font-bold">Asset Management</span>
+    </div>
+
+    <!-- Buttons Container -->
+    <div
+      class="button-group flex align-items-center justify-content-end flex-wrap mt-2 md:mt-0"
+    >
+      <!-- Add Asset Button -->
+      <p-button
+        label="Add Asset"
+        icon="pi pi-plus"
+        (click)="openDialogue()"
+        severity="primary"
+        class="mr-2 mb-2 md:mb-0"
+      ></p-button>
+
+      <!-- Bulk Upload Button -->
+      <p-button
+        label="Bulk Upload"
+        icon="pi pi-upload"
+        (click)="showBulkUploadModal = true"
+        severity="secondary"
+        class="mr-2 mb-2 md:mb-0"
+      ></p-button>
+
+      <!-- Bulk Upload Modal -->
+      <p-dialog
+        [(visible)]="showBulkUploadModal"
+        header="Bulk Upload"
+        [modal]="true"
+        [responsive]="true"
+        [style]="{ width: '40vw' }"
+        [baseZIndex]="10000"
+        [closeOnEscape]="true"
+        (onHide)="onCloseBulkUploadModal()"
+      >
+        <div class="p-fluid p-4">
+          <h3 class="text-center mb-4" style="font-weight: bold">
+            Upload Your Excel File
+          </h3>
+
+          <!-- Download Template Button -->
+          <div class="mb-4">
+            <p-button
+              label="Download Excel Template"
+              icon="pi pi-download"
+              (click)="downloadTemplate()"
+              class="w-full"
+              severity="success"
+              [style]="{ 'border-radius': '25px' }"
+            ></p-button>
+          </div>
+
+          <!-- Upload Updated Excel -->
+          <div class="mb-4">
+            <div class="flex align-items-center">
+              <!-- Separate Select File Button -->
+              <p-button
+                label="Select File"
+                icon="pi pi-folder-open"
+                class="mr-2"
+                (click)="fileUploadInput.click()"
+              ></p-button>
+
+              <!-- Hidden Input for File Upload -->
+              <input
+                type="file"
+                #fileUploadInput
+                accept=".xlsx"
+                (change)="onFileSelect($event)"
+                style="display: none"
+              />
+
+              <!-- Display selected file name -->
+              <span *ngIf="selectedFileName" class="ml-2">
+                {{ selectedFileName }}
+              </span>
+            </div>
+            <br />
+
+            <!-- Upload Button -->
+            <p-button
+              label="Upload File"
+              icon="pi pi-upload"
+              class="w-full mt-3"
+              [disabled]="!selectedFileName"
+              (click)="uploadSelectedFile()"
+            ></p-button>
+          </div>
+
+          <!-- Instructions -->
+          <div class="text-center mb-3">
+            <p class="text-muted" style="font-size: 14px">
+              Please ensure your file is formatted correctly. Refer to the
+              template for guidance.
+            </p>
+          </div>
+        </div>
+
+        <!-- Footer Section -->
+        <ng-template pTemplate="footer">
+          <div class="flex justify-content-between">
+            <p-button
+              label="Close"
+              icon="pi pi-times"
+              (click)="showBulkUploadModal = false"
+              severity="secondary"
+              [style]="{ 'border-radius': '25px' }"
+            ></p-button>
+            <p-button
+              label="Help"
+              icon="pi pi-info"
+              (click)="showHelpDialogModal()"
+              severity="info"
+              [style]="{ 'border-radius': '25px' }"
+            ></p-button>
+          </div>
+        </ng-template>
+      </p-dialog>
+
+      <!-- Help Dialog -->
+      <p-dialog
+        [(visible)]="showHelpDialog"
+        header="Help"
+        [modal]="true"
+        [responsive]="true"
+        [style]="{ width: '30vw' }"
+        [baseZIndex]="10000"
+        [closeOnEscape]="true"
+        (onHide)="showHelpDialog = false"
+      >
+        <div class="p-fluid p-4">
+          <p>
+            For detailed instructions on how to format your Excel file, please
+            refer to the template file or contact support.
+          </p>
+        </div>
+      </p-dialog>
+
+      <!-- Show Asset History Button -->
+      <!-- Button to toggle between Asset History and Normal View -->
+      <p-button
+        [label]="showAssetHistory ? 'Show All Assets' : 'Show Asset History'"
+        icon="pi pi-history"
+        severity="info"
+        class="mb-2 md:mb-0"
+        (click)="toggleAssetHistory()"
+      ></p-button>
+    </div>
+  </div>
+
+  <!-- Table contains -->
+  <app-dynamic-table
+    *ngIf="!showAssetHistory"
+    [showEditButton]="true"
+    [data]="assets"
+    [columns]="columns"
+    (editClicked)="openEditDialogue($event)"
+    #dynamictable
+  ></app-dynamic-table>
+  <!-- Table contains -->
+  <app-dynamic-table
+    *ngIf="showAssetHistory"
+    [showEditButton]="false"
+    [showViewButton]="true"
+    (viewClicked)="openViewDialogue($event)"
+    [data]="assets"
+    [columns]="columns"
+    #dynamictable
+  ></app-dynamic-table>
+  <!-- <div style="margin: auto;">
+  <h3><i class="pi pi-spin pi-spinner mx-3" style="font-size: 1rem"></i> Please wait! Loading . . .</h3>
+ </div> -->
+</span>
+
+<!-- Edit and add user management dialog -->
+<p-dialog
+  [(visible)]="assetCreateDialouge"
+  [style]="{ width: '60%', maxWidth: '900px' }"
+  [closable]="false"
+  [modal]="true"
+  styleClass="p-fluid"
+  appendTo="body"
+>
+  <p-header class="font-medium" *ngIf="!editUserId">New Asset</p-header>
+  <p-header class="font-medium" *ngIf="editUserId">Update Asset</p-header>
+  <ng-template pTemplate="content">
+    <div class="formgrid grid mt-2">
+      <form [formGroup]="assetForm" class="grid gap-2">
+        <!-- Name Fields Group -->
+        <div class="col-12 md:col-12 lg:col-12">
+          <p-fieldset legend="Asset Information" [toggleable]="true">
+            <div class="grid">
+              <div class="col-12 md:col-4 my-3 p-float-label">
+                <p-dropdown
+                  formControlName="asset_owner_id"
+                  [options]="owners"
+                  optionLabel="full_name"
+                  optionValue="user_id"
+                  placeholder="Select a Owner"
+                  appendTo="body"
+                >
+                </p-dropdown>
+                <label for="asset_owner_id"
+                  >Select Owner<span class="required-asterisk">*</span></label
+                >
+                <small
+                  *ngIf="
+                    assetForm.get('asset_owner_id')?.touched &&
+                    assetForm.get('asset_owner_id')?.hasError('required')
+                  "
+                  class="p-error"
+                  >Owner is required.</small
+                >
+              </div>
+              <div class="col-12 md:col-4 my-3 p-float-label">
+                <input
+                  pInputText
+                  id="asset_name"
+                  formControlName="asset_name"
+                />
+                <label for="asset_name"
+                  >Asset Name <span class="required-asterisk">*</span></label
+                >
+              </div>
+
+              <div class="col-12 md:col-4 my-3 p-float-label">
+                <input
+                  pInputText
+                  id="asset_serial_no"
+                  formControlName="asset_serial_no"
+                />
+                <label for="asset_serial_no">Serial No.</label>
+              </div>
+              <div class="col-12 md:col-4 my-3 p-float-label">
+                <input
+                  pInputText
+                  id="description"
+                  formControlName="description"
+                />
+                <label for="description"
+                  >Asset Description<span class="required-asterisk"
+                    >*</span
+                  ></label
+                >
+                <small
+                  *ngIf="
+                    assetForm.get('description')?.touched &&
+                    assetForm.get('description')?.hasError('required')
+                  "
+                  class="p-error"
+                  >Description is required.</small
+                >
+              </div>
+              <div class="col-12 md:col-4 my-3 p-float-label">
+                <p-dropdown
+                  formControlName="asset_type_id"
+                  [options]="assetTypes"
+                  optionLabel="asset_type_name"
+                  optionValue="asset_type_id"
+                  placeholder="Select a Type"
+                  appendTo="body"
+                >
+                  <!-- <ng-template pTemplate="header">
+                  <div class="p-text-center text-center my-1">
+                    <p-button  type="button" label="Add New " (click)="assetTypesDialouge()" icon="pi pi-plus" 
+                            ></p-button>
+                  </div>
+                </ng-template> -->
+                </p-dropdown>
+                <label for="asset_type_id"
+                  >Select Asset Type<span class="required-asterisk"
+                    >*</span
+                  ></label
+                >
+                <small
+                  *ngIf="
+                    assetForm.get('asset_type_id')?.touched &&
+                    assetForm.get('asset_type_id')?.hasError('required')
+                  "
+                  class="p-error"
+                  >Asset type is required.</small
+                >
+              </div>
+
+              <!--               
+              <p-dialog [(visible)]="assetTypesDialog" [style]="{ width: '30%'}" [closable]="false" [modal]="true" styleClass="p-fluid" appendTo="body">
+  
+                <p-header class="font-medium">New Category</p-header>
+                <ng-template pTemplate="content">
+                  <div class="formgrid mt-2">
+                    <form [formGroup]="assetTypesFormData">
+                      <div class="col-12">
+                          <div class="grid">    
+                            <div class="col-12 md:col-12  p-float-label">
+                              <input pInputText id="asset_type_name" formControlName="asset_type_name" />
+                              <label for="asset_type_name">Add Asset Type <span class="required-asterisk">*</span></label>
+                            </div>
+              
+                          
+                          </div>
+                      </div>
+                    </form>
+                  </div>
+                </ng-template>
+              
+                <ng-template pTemplate="footer">
+                  <p-button class="mr-4" icon="pi pi-times" label="Cancel" size="small" severity="secondary" (click)="assetTypesDialog=false"></p-button>
+                  <p-button icon="pi pi-check" label="Add" size="small" severity="primary" [disabled]="assetTypesFormData.invalid" (click)="addassetTypes()"  ></p-button>
+                
+                </ng-template>
+              </p-dialog> -->
+
+              <div class="col-12 md:col-4 my-3 p-float-label">
+                <p-dropdown
+                  formControlName="asset_service_id"
+                  [options]="services"
+                  optionLabel="service_name"
+                  optionValue="service_id"
+                  placeholder="Select Service"
+                  appendTo="body"
+                >
+                </p-dropdown>
+                <label for="asset_service_id"
+                  >Select Service<span class="required-asterisk">*</span></label
+                >
+                <small
+                  *ngIf="
+                    assetForm.get('asset_service_id')?.touched &&
+                    assetForm.get('asset_service_id')?.hasError('required')
+                  "
+                  class="p-error"
+                  >Service is required.</small
+                >
+              </div>
+              <div class="col-12 md:col-4 my-3 p-float-label">
+                <p-dropdown
+                  formControlName="asset_support_group_detail_id"
+                  [options]="supportgroups"
+                  optionLabel="support_group_name"
+                  optionValue="support_group_id"
+                  placeholder="Select Support Group"
+                  appendTo="body"
+                >
+                </p-dropdown>
+                <label for="asset_support_group_detail_id"
+                  >Select Support Group<span class="required-asterisk"
+                    >*</span
+                  ></label
+                >
+                <small
+                  *ngIf="
+                    assetForm.get('asset_support_group_detail_id')?.touched &&
+                    assetForm
+                      .get('asset_support_group_detail_id')
+                      ?.hasError('required')
+                  "
+                  class="p-error"
+                  >Support Group is required.</small
+                >
+              </div>
+              <div class="col-12 md:col-4 my-3 p-float-label">
+                <p-dropdown
+                  formControlName="vendor_id"
+                  [options]="vendors"
+                  optionLabel="vendor_name"
+                  optionValue="vendor_id"
+                  placeholder="Select Vendor"
+                  appendTo="body"
+                >
+                  <ng-template pTemplate="header">
+                    <div class="p-text-center text-center my-1">
+                      <p-button
+                        type="button"
+                        label="Add New "
+                        (click)="vendorDialouge()"
+                        icon="pi pi-plus"
+                      ></p-button>
+                    </div>
+                  </ng-template>
+                </p-dropdown>
+                <label for="vendor_id"
+                  >Vendor<span class="required-asterisk">*</span></label
+                >
+                <small
+                  *ngIf="
+                    assetForm.get('vendor_id')?.touched &&
+                    assetForm.get('vendor_id')?.hasError('required')
+                  "
+                  class="p-error"
+                  >Vendor is required.</small
+                >
+              </div>
+
+              <p-dialog
+                [(visible)]="vendorDialog"
+                [style]="{ width: '30%' }"
+                [closable]="false"
+                [modal]="true"
+                styleClass="p-fluid"
+                appendTo="body"
+              >
+                <p-header class="font-medium">New Vendor</p-header>
+                <ng-template pTemplate="content">
+                  <div class="formgrid mt-2">
+                    <form [formGroup]="vendorFormData">
+                      <!-- CI Details -->
+                      <div class="col-12">
+                        <!-- <p-fieldset legend="Details" [toggleable]="true" styleClass="w-full"> -->
+                        <div class="grid">
+                          <div class="col-12 md:col-12 p-float-label">
+                            <input
+                              pInputText
+                              id="vendor_name"
+                              formControlName="vendor_name"
+                            />
+                            <label for="vendor_name"
+                              >Add Vendor
+                              <span class="required-asterisk">*</span></label
+                            >
+                          </div>
+                        </div>
+                        <!-- </p-fieldset> -->
+                      </div>
+                    </form>
+                  </div>
+                </ng-template>
+
+                <ng-template pTemplate="footer">
+                  <p-button
+                    class="mr-4"
+                    icon="pi pi-times"
+                    label="Cancel"
+                    size="small"
+                    severity="secondary"
+                    (click)="vendorDialog = false"
+                  ></p-button>
+                  <p-button
+                    icon="pi pi-check"
+                    label="Add"
+                    size="small"
+                    severity="primary"
+                    [disabled]="vendorFormData.invalid"
+                    (click)="addvendorDialouge()"
+                  ></p-button>
+                </ng-template>
+              </p-dialog>
+
+              <div class="col-12 md:col-4 my-3 p-float-label">
+                <p-dropdown
+                  formControlName="branch_id"
+                  [options]="branches"
+                  optionLabel="branch_name"
+                  optionValue="branch_id"
+                  placeholder="Select Branch"
+                  appendTo="body"
+                >
+                  <ng-template pTemplate="header">
+                    <div class="p-text-center text-center my-1">
+                      <p-button
+                        type="button"
+                        label="Add New "
+                        (click)="branchDialouge()"
+                        icon="pi pi-plus"
+                      ></p-button>
+                    </div>
+                  </ng-template>
+                </p-dropdown>
+                <label for="branch_id">Branch</label>
+              </div>
+
+              <p-dialog
+                [(visible)]="branchDialog"
+                [style]="{ width: '30%' }"
+                [closable]="false"
+                [modal]="true"
+                styleClass="p-fluid"
+                appendTo="body"
+              >
+                <p-header class="font-medium">New Branch</p-header>
+                <ng-template pTemplate="content">
+                  <div class="formgrid mt-2">
+                    <form [formGroup]="branchFormData">
+                      <!-- CI Details -->
+                      <div class="col-12">
+                        <!-- <p-fieldset legend="Details" [toggleable]="true" styleClass="w-full"> -->
+                        <div class="grid">
+                          <div class="col-12 md:col-12 p-float-label">
+                            <input
+                              pInputText
+                              id="branch_name"
+                              formControlName="branch_name"
+                            />
+                            <label for="branch_name"
+                              >Add Branch
+                              <span class="required-asterisk">*</span></label
+                            >
+                          </div>
+                        </div>
+                        <!-- </p-fieldset> -->
+                      </div>
+                    </form>
+                  </div>
+                </ng-template>
+
+                <ng-template pTemplate="footer">
+                  <p-button
+                    class="mr-4"
+                    icon="pi pi-times"
+                    label="Cancel"
+                    size="small"
+                    severity="secondary"
+                    (click)="branchDialog = false"
+                  ></p-button>
+                  <p-button
+                    icon="pi pi-check"
+                    label="Add"
+                    size="small"
+                    severity="primary"
+                    [disabled]="branchFormData.invalid"
+                    (click)="addBranch()"
+                  ></p-button>
+                </ng-template>
+              </p-dialog>
+
+              <div class="col-12 md:col-4 my-3 p-float-label">
+                <p-dropdown
+                  formControlName="model_id"
+                  [options]="modals"
+                  optionLabel="model_name"
+                  optionValue="model_id"
+                  placeholder="Select Model"
+                  appendTo="body"
+                >
+                  <ng-template pTemplate="header">
+                    <div class="p-text-center text-center my-1">
+                      <p-button
+                        type="button"
+                        label="Add New "
+                        (click)="modelDialouge()"
+                        icon="pi pi-plus"
+                      ></p-button>
+                    </div>
+                  </ng-template>
+                </p-dropdown>
+                <label for="model_id">Model</label>
+              </div>
+
+              <p-dialog
+                [(visible)]="modelDialog"
+                [style]="{ width: '30%' }"
+                [closable]="false"
+                [modal]="true"
+                styleClass="p-fluid"
+                appendTo="body"
+              >
+                <p-header class="font-medium">New Model</p-header>
+                <ng-template pTemplate="content">
+                  <div class="formgrid mt-2">
+                    <form [formGroup]="modelFormData">
+                      <!-- CI Details -->
+                      <div class="col-12">
+                        <!-- <p-fieldset legend="Details" [toggleable]="true" styleClass="w-full"> -->
+                        <div class="grid">
+                          <div class="col-12 md:col-12 p-float-label">
+                            <input
+                              pInputText
+                              id="model_name"
+                              formControlName="model_name"
+                            />
+                            <label for="model_name"
+                              >Add Model
+                              <span class="required-asterisk">*</span></label
+                            >
+                          </div>
+                        </div>
+                        <!-- </p-fieldset> -->
+                      </div>
+                    </form>
+                  </div>
+                </ng-template>
+
+                <ng-template pTemplate="footer">
+                  <p-button
+                    class="mr-4"
+                    icon="pi pi-times"
+                    label="Cancel"
+                    size="small"
+                    severity="secondary"
+                    (click)="modelDialog = false"
+                  ></p-button>
+                  <p-button
+                    icon="pi pi-check"
+                    label="Add"
+                    size="small"
+                    severity="primary"
+                    [disabled]="modelFormData.invalid"
+                    (click)="addModel()"
+                  ></p-button>
+                </ng-template>
+              </p-dialog>
+
+              <div class="col-12 md:col-4 my-3 p-float-label">
+                <p-dropdown
+                  formControlName="assetstatus_id"
+                  [options]="statusListData"
+                  optionLabel="status_name"
+                  optionValue="status_id"
+                  placeholder="Select a Status"
+                  appendTo="body"
+                >
+                  <!-- <ng-template pTemplate="header">
+                  <div class="p-text-center text-center my-1">
+                    <p-button  type="button" label="Add New " (click)="assetTypesDialouge()" icon="pi pi-plus" 
+                            ></p-button>
+                  </div>
+                </ng-template> -->
+                </p-dropdown>
+                <label for="status_id"
+                  >Select Asset Status<span class="required-asterisk"
+                    >*</span
+                  ></label
+                >
+                <small
+                  *ngIf="
+                    assetForm.get('status_id')?.touched &&
+                    assetForm.get('status_id')?.hasError('required')
+                  "
+                  class="p-error"
+                  >Asset Status is required.</small
+                >
+              </div>
+            </div>
+          </p-fieldset>
+        </div>
+
+        <!-- Date Information Group -->
+        <div class="col-12 md:col-12 lg:col-12">
+          <p-fieldset legend="Date Information" [toggleable]="true">
+            <div class="grid">
+              <div class="col-12 md:col-4 my-3 p-float-label">
+                <p-calendar
+                  formControlName="invoice_date"
+                  [dateFormat]="dateFormat"
+                  [showIcon]="true"
+                  appendTo="body"
+                  [showClear]="true"
+                ></p-calendar>
+                <label for="invoice_date"
+                  >Purchase Date<span class="required-asterisk">*</span></label
+                >
+                <small
+                  *ngIf="
+                    assetForm.get('invoice_date')?.touched &&
+                    assetForm.get('invoice_date')?.hasError('required')
+                  "
+                  class="p-error"
+                  >Purchase Date is required.</small
+                >
+              </div>
+              <div class="col-12 md:col-4 my-3 p-float-label">
+                <p-calendar
+                  formControlName="warranty_start_date"
+                  [showIcon]="true"
+                  [dateFormat]="dateFormat"
+                  appendTo="body"
+                  [showClear]="true"
+                ></p-calendar>
+                <label for="warranty_start_date"
+                  >Assigned Date<span class="required-asterisk">*</span></label
+                >
+                <small
+                  *ngIf="
+                    assetForm.get('warranty_start_date')?.touched &&
+                    assetForm.get('warranty_start_date')?.hasError('required')
+                  "
+                  class="p-error"
+                  >Assigned Date is required.</small
+                >
+              </div>
+              <div class="col-12 md:col-4 my-3 p-float-label">
+                <p-calendar
+                  formControlName="warranty_end_date"
+                  [showIcon]="true"
+                  [dateFormat]="dateFormat"
+                  appendTo="body"
+                  [showClear]="true"
+                ></p-calendar>
+                <label for="warranty_end_date"
+                  >Expiry Date<span class="required-asterisk">*</span></label
+                >
+                <small
+                  *ngIf="
+                    assetForm.get('warranty_end_date')?.touched &&
+                    assetForm.get('warranty_end_date')?.hasError('required')
+                  "
+                  class="p-error"
+                  >Expiry Date is required.</small
+                >
+              </div>
+            </div>
+          </p-fieldset>
+        </div>
+
+        <!-- Account Information Group -->
+        <div class="col-12 md:col-12 lg:col-12">
+          <p-fieldset legend="CI Information" [toggleable]="true">
+            <div class="grid">
+              <div class="col-12 md:col-4 my-3 p-float-label">
+                <input pInputText id="ci_name" formControlName="ci_name" />
+                <label for="ci_name"
+                  >CI Name <span class="required-asterisk">*</span></label
+                >
+                <small
+                  *ngIf="
+                    assetForm.get('ci_name')?.touched &&
+                    assetForm.get('ci_name')?.hasError('required')
+                  "
+                  class="p-error"
+                  >CI Name is required.</small
+                >
+              </div>
+
+              <div class="col-12 md:col-4 my-3 p-float-label">
+                <p-dropdown
+                  [options]="cicategory"
+                  formControlName="asset_ci_category_id"
+                  optionLabel="ci_category_name"
+                  optionValue="ci_category_id"
+                  placeholder="Select Category"
+                  appendTo="body"
+                >
+                  <ng-template pTemplate="header">
+                    <div class="p-text-center text-center my-1">
+                      <p-button
+                        type="button"
+                        label="Add New "
+                        (click)="categoryDialouge()"
+                        icon="pi pi-plus"
+                      ></p-button>
+                    </div> </ng-template
+                ></p-dropdown>
+                <label for="asset_ci_category_id"
+                  >CI Category<span class="required-asterisk">*</span></label
+                >
+                <small
+                  *ngIf="
+                    assetForm.get('asset_ci_category_id')?.touched &&
+                    assetForm.get('asset_ci_category_id')?.hasError('required')
+                  "
+                  class="p-error"
+                  >CI Category is required.</small
+                >
+              </div>
+
+              <p-dialog
+                [(visible)]="categoryDialog"
+                [style]="{ width: '30%' }"
+                [closable]="false"
+                [modal]="true"
+                styleClass="p-fluid"
+                appendTo="body"
+              >
+                <p-header class="font-medium">New Category</p-header>
+                <ng-template pTemplate="content">
+                  <div class="formgrid mt-2">
+                    <form [formGroup]="categoryFormData">
+                      <!-- CI Details -->
+                      <div class="col-12">
+                        <!-- <p-fieldset legend="Details" [toggleable]="true" styleClass="w-full"> -->
+                        <div class="grid">
+                          <div class="col-12 md:col-12 p-float-label">
+                            <input
+                              pInputText
+                              id="ci_category_name"
+                              formControlName="ci_category_name"
+                            />
+                            <label for="ci_category_name"
+                              >Add Category
+                              <span class="required-asterisk">*</span></label
+                            >
+                          </div>
+                        </div>
+                        <!-- </p-fieldset> -->
+                      </div>
+                    </form>
+                  </div>
+                </ng-template>
+
+                <ng-template pTemplate="footer">
+                  <p-button
+                    class="mr-4"
+                    icon="pi pi-times"
+                    label="Cancel"
+                    size="small"
+                    severity="secondary"
+                    (click)="categoryDialog = false"
+                  ></p-button>
+                  <p-button
+                    icon="pi pi-check"
+                    label="Add"
+                    size="small"
+                    severity="primary"
+                    [disabled]="categoryFormData.invalid"
+                    (click)="addCategory()"
+                  ></p-button>
+                </ng-template>
+              </p-dialog>
+
+              <div class="col-12 md:col-4 my-3 p-float-label">
+                <p-dropdown
+                  [options]="CIClassification"
+                  formControlName="asset_ci_classification_id"
+                  optionLabel="ci_classification_name"
+                  optionValue="ci_classification_id"
+                  placeholder="Select Classification"
+                  appendTo="body"
+                >
+                  <ng-template pTemplate="header">
+                    <div class="p-text-center text-center my-1">
+                      <p-button
+                        type="button"
+                        label="Add New "
+                        (click)="classificationDialouge()"
+                        icon="pi pi-plus"
+                      ></p-button>
+                    </div>
+                  </ng-template>
+                </p-dropdown>
+                <label for="asset_ci_classification_id"
+                  >CI Classification<span class="required-asterisk"
+                    >*</span
+                  ></label
+                >
+                <small
+                  *ngIf="
+                    assetForm.get('asset_ci_classification_id')?.touched &&
+                    assetForm
+                      .get('asset_ci_classification_id')
+                      ?.hasError('required')
+                  "
+                  class="p-error"
+                  >CI Classification is required.</small
+                >
+              </div>
+
+              <p-dialog
+                [(visible)]="CIDialog"
+                [style]="{ width: '30%' }"
+                [closable]="false"
+                [modal]="true"
+                styleClass="p-fluid"
+                appendTo="body"
+              >
+                <p-header class="font-medium">New Classification</p-header>
+                <ng-template pTemplate="content">
+                  <div class="formgrid mt-2">
+                    <form [formGroup]="CIFormData">
+                      <!-- CI Details -->
+                      <div class="col-12">
+                        <!-- <p-fieldset legend="Details" [toggleable]="true" styleClass="w-full"> -->
+                        <div class="grid">
+                          <div class="col-12 md:col-12 p-float-label">
+                            <input
+                              pInputText
+                              id="ci_classification_name"
+                              formControlName="ci_classification_name"
+                            />
+                            <label for="ci_classification_name"
+                              >Add Classification
+                              <span class="required-asterisk">*</span></label
+                            >
+                          </div>
+                        </div>
+                        <!-- </p-fieldset> -->
+                      </div>
+                    </form>
+                  </div>
+                </ng-template>
+
+                <ng-template pTemplate="footer">
+                  <p-button
+                    class="mr-4"
+                    icon="pi pi-times"
+                    label="Cancel"
+                    size="small"
+                    severity="secondary"
+                    (click)="CIDialog = false"
+                  ></p-button>
+                  <p-button
+                    icon="pi pi-check"
+                    label="Add"
+                    size="small"
+                    severity="primary"
+                    [disabled]="CIFormData.invalid"
+                    (click)="addCI()"
+                  ></p-button>
+                </ng-template>
+              </p-dialog>
+            </div>
+          </p-fieldset>
+        </div>
+      </form>
+    </div>
+  </ng-template>
+
+  <ng-template pTemplate="footer">
+    <p-button
+      class="mr-4"
+      icon="pi pi-times"
+      label="Cancel"
+      size="small"
+      severity="secondary"
+      (click)="assetCreateDialouge = false"
+    ></p-button>
+    <p-button
+      icon="pi pi-check"
+      label="Save"
+      size="small"
+      severity="primary"
+      *ngIf="!editUserId"
+      (click)="saveAsset()"
+    ></p-button>
+    <p-button
+      icon="pi pi-check"
+      label="Update"
+      size="small"
+      severity="primary"
+      *ngIf="editUserId"
+      (click)="onUpdate()"
+      [disabled]="assetForm.invalid"
+    ></p-button>
+
+    <!-- <p-button class="mr-4" icon="pi pi-times" label="Cancel" size="small" severity="secondary" (click)="userDialouge=false"></p-button> -->
+    <!-- <p-button icon="pi pi-check" label="Save" size="small" severity="primary" (click)="onSubmit()"></p-button> -->
+  </ng-template>
+</p-dialog>
+<!-- Asset History dialog -->
+<p-dialog
+  [(visible)]="assetHistoryDialouge"
+  [style]="{ width: '70%', maxWidth: '1000px' }"
+  [closable]="true"
+  [modal]="true"
+  styleClass="p-fluid"
+  appendTo="body"
+  class="change-management-dialog"
+>
+  <p-header class="font-medium">Asset History</p-header>
+  <ng-template pTemplate="content">
+    <div class="change-details-container">
+      <div class="px-2">
+        <div class="grid mt-3 sticky-custom-bg">
+          <div class="col-12">
+            <div class="grid" *ngFor="let item of assetHistoryData">
+              <div class="col-12">
+                <div
+                  class="surface-card border-1 border-round border-gray-400 p-3"
+                >
+                  <div class="grid">
+                    <div class="md:col-4 col-12">
+                      <p class="label">
+                        <strong>Asset Name:</strong>
+                        {{ item.asset_name }}
+                      </p>
+                      <p class="label">
+                        <strong>Asset Type:</strong>
+                        {{ item.asset_type_name }}
+                      </p>
+                      <p class="label">
+                        <strong>End of Life:</strong>
+                        {{ item["Expiry Date"] | date : "dd/MM/yyyy" }}
+                      </p>
+                    </div>
+                    <div class="md:col-4 col-12">
+                      <p class="label">
+                        <strong>Serial Number:</strong>
+                        {{ item.asset_serial_no }}
+                      </p>
+                      <p class="label">
+                        <strong>Status:</strong> {{ item.status_name }}
+                      </p>
+                      <p class="label">
+                        <strong>Vendor:</strong> {{ item.vendor_name }}
+                      </p>
+                      <p class="label">
+                        <strong>Assigned To:</strong>
+                        {{ item["User Name"] }}
+                      </p>
+                    </div>
+                    <div class="md:col-4 col-12">
+                      <p class="label">
+                        <strong>Branch:</strong> {{ item.branch_name }}
+                      </p>
+                      <p class="label">
+                        <strong>Purchased On:</strong>
+                        {{ item["purchase_date"] | date : "dd/MM/yyyy" }}
+                      </p>
+                      <p class="label">
+                        <strong>Assigned On:</strong>
+                        {{ item["assigned_date"] | date : "dd/MM/yyyy" }}
+                      </p>
+                    </div>
+                  </div>
+                  <div class="grid ml-3 mt-2"></div>
+                  <hr class="mx-3 mb-0" />
+                  <div class="grid mt-3">
+                    <div class="col-12 px-4">
+                      <h4 class="m-0">
+                        <u><strong>Asset History</strong></u>
+                      </h4>
+                      <br />
+                      <!-- <p-timeline [value]="item.previous_assigned_to_info" align="alternate">
+                      <ng-template pTemplate="content" let-event>
+                        {{ event.username }}<br />{{
+                          event.assignto_date | date : "dd/MM/yy"
+                        }}
+                      </ng-template>
+                      <ng-template pTemplate="opposite" let-event
+                        ><span><br /><br /><br /></span
+                      ></ng-template>
+                    </p-timeline> -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <br />
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template pTemplate="footer">
+    <p-button
+      type="button"
+      label="Close"
+      icon="pi pi-times"
+      (click)="assetHistoryDialouge = false"
+      severity="secondary"
+    ></p-button>
+  </ng-template>
+</p-dialog>

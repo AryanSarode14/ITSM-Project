@@ -1,0 +1,409 @@
+
+<span>
+  <div
+    class="mb-3 pt-3 flex align-items-center justify-content-between flex-wrap"
+  >
+    <!-- Breadcrumb and Title -->
+    <div class="breadcrumb-container">
+      <i
+        class="pi pi-home cursor-pointer"
+        [routerLink]="['/admin/admin-dashboard']"
+      ></i>
+      <i class="pi pi-chevron-right mx-2"></i>
+      <span class="title font-bold">User Management</span>
+    </div>
+
+    <!-- Buttons Container -->
+    <div
+      class="button-group flex align-items-center justify-content-end flex-wrap mt-2 md:mt-0"
+    >
+      <!-- Add Asset Button -->
+      <p-button
+        label="Add User"
+        icon="pi pi-plus"
+        (click)="openDialogue()"
+        severity="primary"
+        class="mr-2 mb-2 md:mb-0"
+      ></p-button>
+
+      <!-- Bulk Upload Button -->
+      <p-button
+        label="Bulk Upload"
+        icon="pi pi-upload"
+        (click)="showBulkUploadModal = true"
+        severity="secondary"
+        class="mr-2 mb-2 md:mb-0"
+      ></p-button>
+
+      <!-- Bulk Upload Modal -->
+      <p-dialog
+        [(visible)]="showBulkUploadModal"
+        header="Bulk Upload"
+        [modal]="true"
+        [responsive]="true"
+        [style]="{ width: '40vw' }"
+        [baseZIndex]="10000"
+        [closeOnEscape]="true"
+        (onHide)="onCloseBulkUploadModal()"
+      >
+        <div class="p-fluid p-4">
+          <h3 class="text-center mb-4" style="font-weight: bold">
+            Upload Your Excel File
+          </h3>
+
+          <!-- Download Template Button -->
+          <div class="mb-4">
+            <p-button
+              label="Download Excel Template"
+              icon="pi pi-download"
+              (click)="downloadTemplate()"
+              class="w-full"
+              severity="success"
+              [style]="{ 'border-radius': '25px' }"
+            ></p-button>
+          </div>
+
+          <!-- Upload Updated Excel -->
+          <div class="mb-4">
+            <div class="flex align-items-center">
+              <!-- Separate Select File Button -->
+              <p-button
+                label="Select File"
+                icon="pi pi-folder-open"
+                class="mr-2"
+                (click)="fileUploadInput.click()"
+              ></p-button>
+
+              <!-- Hidden Input for File Upload -->
+              <input
+                type="file"
+                #fileUploadInput
+                accept=".xlsx"
+                (change)="onFileSelect($event)"
+                style="display: none"
+              />
+
+              <!-- Display selected file name -->
+              <span *ngIf="selectedFileName" class="ml-2">
+                {{ selectedFileName }}
+              </span>
+            </div>
+            <br />
+
+            <!-- Upload Button -->
+            <p-button
+              label="Upload File"
+              icon="pi pi-upload"
+              class="w-full mt-3"
+              [disabled]="!selectedFileName"
+              (click)="uploadSelectedFile()"
+            ></p-button>
+          </div>
+
+          <!-- Instructions -->
+          <div class="text-center mb-3">
+            <p class="text-muted" style="font-size: 14px">
+              Please ensure your file is formatted correctly. Refer to the
+              template for guidance.
+            </p>
+          </div>
+        </div>
+
+        <!-- Footer Section -->
+        <ng-template pTemplate="footer">
+          <div class="flex justify-content-between">
+            <p-button
+              label="Close"
+              icon="pi pi-times"
+              (click)="showBulkUploadModal = false"
+              severity="secondary"
+              [style]="{ 'border-radius': '25px' }"
+            ></p-button>
+            <p-button
+              label="Help"
+              icon="pi pi-info"
+              (click)="showHelpDialogModal()"
+              severity="info"
+              [style]="{ 'border-radius': '25px' }"
+            ></p-button>
+          </div>
+        </ng-template>
+      </p-dialog>
+
+      <!-- Help Dialog -->
+      <p-dialog
+        [(visible)]="showHelpDialog"
+        header="Help"
+        [modal]="true"
+        [responsive]="true"
+        [style]="{ width: '30vw' }"
+        [baseZIndex]="10000"
+        [closeOnEscape]="true"
+        (onHide)="showHelpDialog = false"
+      >
+        <div class="p-fluid p-4">
+          <p>
+            For detailed instructions on how to format your Excel file, please
+            refer to the template file or contact support.
+          </p>
+        </div>
+      </p-dialog>
+    </div>
+  </div>
+
+  <app-dynamic-table  [data]="customers" [columns]="columns" (editClicked)="openEditDialogue($event)" #dynamictable></app-dynamic-table>
+  <!-- <div style="margin: auto;">
+  <h3><i class="pi pi-spin pi-spinner mx-3" style="font-size: 1rem"></i> Please wait! Loading . . .</h3>
+ </div> -->
+</span>
+
+
+
+<!-- Edit and add user management dialog -->
+<p-dialog [(visible)]="userDialouge" [style]="{ width: '80%', maxWidth: '900px' }" [closable]="false" [modal]="true" styleClass="p-fluid" appendTo="body">
+  <p-header class="font-medium" *ngIf="!editUserId">New User</p-header>
+  <p-header class="font-medium" *ngIf="editUserId">Update User</p-header>
+  <ng-template pTemplate="content">
+    <div class="formgrid grid mt-2">
+      <form [formGroup]="userForm" class="grid gap-2">
+        <!-- Name Fields Group -->
+        <div class="col-12 md:col-12 lg:col-12">
+          <p-fieldset legend="User Information" [toggleable]="true">
+            <div class="grid">
+              <div class="col-12 md:col-4 my-3 p-float-label">
+                <input pInputText id="firstName" formControlName="firstName" />
+                <label for="firstName">First Name <span class="required-asterisk">*</span></label>
+                <small *ngIf="userForm.get('firstName')?.touched && userForm.get('firstName')?.hasError('required')" class="p-error">First Name is required.</small>
+                <small *ngIf="userForm.get('firstName')?.touched && userForm.get('firstName')?.hasError('minlength')" class="p-error">First Name must be at least 2 characters long.</small>
+              </div>
+
+              <div class="col-12 md:col-4 my-3 p-float-label">
+                <input pInputText id="middleName" formControlName="middleName" />
+                <label for="middleName">Middle Name</label>
+              </div>
+
+              <div class="col-12 md:col-4 my-3 p-float-label">
+                <input pInputText id="lastName" formControlName="lastName" />
+                <label for="lastName">Last Name <span class="required-asterisk">*</span></label>
+                <small *ngIf="userForm.get('lastName')?.touched && userForm.get('lastName')?.hasError('required')" class="p-error">Last Name is required.</small>
+                <small *ngIf="userForm.get('lastName')?.touched && userForm.get('lastName')?.hasError('minlength')" class="p-error">Last Name must be at least 2 characters long.</small>
+              </div>
+
+              <div class="col-12 md:col-4 my-3 p-float-label">
+                <input pInputText id="description" formControlName="description" />
+                <label for="description">Description </label>
+                <small *ngIf="userForm.get('description')?.touched && userForm.get('description')?.hasError('required')" class="p-error">Description is required.</small>
+              </div>
+            </div>
+          </p-fieldset>
+        </div>
+
+        <!-- Contact Information Group -->
+        <div class="col-12 md:col-12 lg:col-12">
+          <p-fieldset legend="Contact Information" [toggleable]="true">
+            <div class="grid">
+              <div class="col-12 md:col-4 my-3 p-float-label">
+                <input pInputText id="emailId" formControlName="email" />
+                <label for="emailId">Email ID <span class="required-asterisk">*</span></label>
+                <small *ngIf="userForm.get('email')?.touched && userForm.get('email')?.hasError('required')" class="p-error">Email is required.</small>
+                <small *ngIf="userForm.get('email')?.touched && userForm.get('email')?.hasError('email')" class="p-error">Enter a valid email address.</small>
+              </div>
+
+              <div class="col-12 md:col-4 my-3 p-float-label">
+                <input pInputText id="mobileNumber" formControlName="mobileNumber" />
+                <label for="mobileNumber">Mobile Number <span class="required-asterisk">*</span></label>
+                <small *ngIf="userForm.get('mobileNumber')?.touched && userForm.get('mobileNumber')?.hasError('required')" class="p-error">Mobile number is required.</small>
+                <small *ngIf="userForm.get('mobileNumber')?.touched && userForm.get('mobileNumber')?.hasError('pattern')" class="p-error">Enter a valid 10-digit mobile number.</small>
+              </div>
+            </div>
+          </p-fieldset>
+        </div>
+
+        <!-- Account Information Group -->
+        <div class="col-12 md:col-12 lg:col-12">
+          <p-fieldset legend="Account Information" [toggleable]="true">
+            <div class="grid">
+              <div class="col-12 md:col-4 my-3 p-float-label">
+                <input pInputText id="username" formControlName="userName"  autocomplete="new-username" />
+                <label for="username">Username <span class="required-asterisk">*</span></label>
+                <small *ngIf="userForm.get('userName')?.touched && userForm.get('userName')?.hasError('required')" class="p-error">Username is required.</small>
+                <small *ngIf="userForm.get('userName')?.touched && userForm.get('userName')?.hasError('minlength')" class="p-error">Username must be at least 4 characters long.</small>
+              </div>
+
+              <div class="col-12 md:col-4 my-3 p-float-label" *ngIf="!editUserId">
+                <input pInputText id="password" formControlName="password" type="password" autocomplete="new-password"/>
+                <label for="password">Password <span class="required-asterisk">*</span></label>
+                <small *ngIf="userForm.get('password')?.touched && userForm.get('password')?.hasError('required')" class="p-error">Password is required.</small>
+                <small *ngIf="userForm.get('password')?.touched && userForm.get('password')?.hasError('minlength')" class="p-error">Password must be at least 6 characters long.</small>
+              </div>
+            </div>
+          </p-fieldset>
+        </div>
+
+        <!-- Role & Group Information -->
+        <div class="col-12 md:col-12 lg:col-12">
+          <p-fieldset legend="Role & Group Information" [toggleable]="true">
+            <div class="grid">
+              <div class="col-12 md:col-4 my-3 p-float-label">
+                <p-dropdown [options]="supportGroups" formControlName="supportGroup" optionLabel="support_group_name" placeholder="Select a Support Group" optionValue="support_group_id" appendTo="body">
+                  <ng-template pTemplate="header">
+                    <div class="p-text-center text-center my-1">
+                      <p-button  type="button" label="Add New " (click)="openSupprtDialouge()" icon="pi pi-plus" 
+                          ></p-button>
+                    </div>
+                  </ng-template>
+                </p-dropdown>
+                <label for="supportGroup">Support Group</label>
+              </div>
+
+       
+
+              <p-dialog [(visible)]="addSupportDialog" [style]="{ width: '30%'}" [closable]="false" [modal]="true" styleClass="p-fluid" appendTo="body">
+  
+                <p-header class="font-medium">New Support Group</p-header>
+                <ng-template pTemplate="content">
+                  <div class="formgrid mt-2">
+                    <form [formGroup]="addSupportGroupForm">
+                      <!-- CI Details -->
+                      <div class="col-12">
+                        <!-- <p-fieldset legend="Details" [toggleable]="true" styleClass="w-full"> -->
+                          <div class="grid">    
+                            <div class="col-12 md:col-12  p-float-label">
+                              <input pInputText id="support_group_name" formControlName="support_group_name" />
+                              <label for="support_group_name">Add support Group  <span class="required-asterisk">*</span></label>
+                            </div>
+              
+                          
+                          </div>
+                        <!-- </p-fieldset> -->
+                      </div>
+                    </form>
+                  </div>
+                </ng-template>
+              
+                <ng-template pTemplate="footer">
+                  <p-button class="mr-4" icon="pi pi-times" label="Cancel" size="small" severity="secondary" (click)="addSupportDialog=false"></p-button>
+                  <p-button icon="pi pi-check" label="Add" size="small" severity="primary" [disabled]="addSupportGroupForm.invalid" (click)="addSupportGroup()"  ></p-button>
+                
+                </ng-template>
+              </p-dialog>
+              
+              
+              <div class="col-12 md:col-4 my-3 p-float-label">
+                <p-dropdown [options]="userRoles" formControlName="userRole" optionValue="role_id" optionLabel="role_name" placeholder="Select a User Role" appendTo="body">
+                  <ng-template pTemplate="header">
+                    <div class="p-text-center text-center my-1">
+                      <p-button  type="button" label="Add New " (click)="openRoleDialouge()" icon="pi pi-plus" 
+                              ></p-button>
+                    </div>
+                  </ng-template>
+
+                </p-dropdown>
+                <label for="userRole">User Role <span class="required-asterisk">*</span></label>
+                <small *ngIf="userForm.get('userRole')?.touched && userForm.get('userRole')?.hasError('required')" class="p-error">Support Group is required.</small>
+                
+              </div>
+              <p-dialog [(visible)]="addRoletDialog" [style]="{ width: '30%'}" [closable]="false" [modal]="true" styleClass="p-fluid" appendTo="body">
+  
+                <p-header class="font-medium">New User Role</p-header>
+                <ng-template pTemplate="content">
+                  <div class="formgrid mt-2">
+                    <form [formGroup]="addRoleFormData">
+                      <!-- CI Details -->
+                      <div class="col-12">
+                        <!-- <p-fieldset legend="Details" [toggleable]="true" styleClass="w-full"> -->
+                          <div class="grid">    
+                            <div class="col-12 md:col-12  p-float-label">
+                              <input pInputText id="role_name" formControlName="role_name" />
+                              <label for="role_name">Add User Role  <span class="required-asterisk">*</span></label>
+                            </div>
+              
+                          
+                          </div>
+                        <!-- </p-fieldset> -->
+                      </div>
+                    </form>
+                  </div>
+                </ng-template>
+              
+                <ng-template pTemplate="footer">
+                  <p-button class="mr-4" icon="pi pi-times" label="Cancel" size="small" severity="secondary" (click)="addRoletDialog=false"></p-button>
+                  <p-button icon="pi pi-check" label="Add" size="small" severity="primary" [disabled]="addRoleFormData.invalid" (click)="addRoles()"  ></p-button>
+                
+                </ng-template>
+              </p-dialog>
+
+
+              <div class="col-12 md:col-4 my-3 p-float-label">
+                <p-dropdown [options]="levels" formControlName="level" optionValue="level_id" optionLabel="level_name" placeholder="Select a Level" appendTo="body">
+                  <ng-template pTemplate="header">
+                    <div class="p-text-center text-center my-1">
+                      <p-button  type="button" label="Add New " (click)="openLevelDialouge()" icon="pi pi-plus" 
+                           ></p-button>
+                    </div>
+                  </ng-template>
+
+                </p-dropdown>
+                <label for="level">Level</label>
+              </div>
+              <p-dialog [(visible)]="addLeveleDialog" [style]="{ width: '30%'}" [closable]="false" [modal]="true" styleClass="p-fluid" appendTo="body">
+  
+                <p-header class="font-medium">New Level</p-header>
+                <ng-template pTemplate="content">
+                  <div class="formgrid mt-2">
+                    <form [formGroup]="addLevelFormData">
+                      <!-- CI Details -->
+                      <div class="col-12">
+                        <!-- <p-fieldset legend="Details" [toggleable]="true" styleClass="w-full"> -->
+                          <div class="grid">    
+                            <div class="col-12 md:col-12  p-float-label">
+                              <input pInputText id="level_name" formControlName="level_name" />
+                              <label for="level_name">Add Level <span class="required-asterisk">*</span></label>
+                            </div>
+              
+                          
+                          </div>
+                        <!-- </p-fieldset> -->
+                      </div>
+                    </form>
+                  </div>
+                </ng-template>
+              
+                <ng-template pTemplate="footer">
+                  <p-button class="mr-4" icon="pi pi-times" label="Cancel" size="small" severity="secondary" (click)="addLeveleDialog=false"></p-button>
+                  <p-button icon="pi pi-check" label="Add" size="small" severity="primary" [disabled]="addLevelFormData.invalid" (click)="addLevels()"  ></p-button>
+                
+                </ng-template>
+              </p-dialog>
+
+            </div>
+          </p-fieldset>
+        </div>
+
+        <!-- Other Information Group -->
+        <div class="col-12 md:col-12 lg:col-12">
+          <p-fieldset legend="Additional Information" [toggleable]="true">
+            <div class="grid">
+              <div class="col-12 md:col-4 my-3 p-float-label">
+                <p-dropdown [options]="genders" formControlName="genderId" optionValue="id" optionLabel="gender_name" placeholder="Select Gender" appendTo="body"></p-dropdown>
+                <label for="gender">Gender <span class="required-asterisk">*</span></label>
+                <small *ngIf="userForm.get('genderId')?.touched && userForm.get('genderId')?.hasError('required')" class="p-error">Support Group is required.</small>
+              </div>
+
+              <div class="col-12 md:col-4 my-3 p-float-label">
+                <p-dropdown [options]="reportingTo" formControlName="reportingTo" optionValue="user_id" optionLabel="full_name" placeholder="Select Reporting To" appendTo="body"></p-dropdown>
+                <label for="reportingTo">Select Reporting To</label>
+              </div>
+            </div>
+          </p-fieldset>
+        </div>
+      </form>
+    </div>
+  </ng-template>
+
+  <ng-template pTemplate="footer">
+    <p-button class="mr-4" icon="pi pi-times" label="Cancel" size="small" severity="secondary" (click)="userDialouge=false"></p-button>
+    <p-button icon="pi pi-check" label="Save" size="small" severity="primary" *ngIf="!editUserId" (click)="onSubmit()" [disabled]="userForm.invalid"></p-button>
+    <p-button icon="pi pi-check" label="Update" size="small" severity="primary"*ngIf="editUserId"  (click)="onUpdate()"></p-button>
+  </ng-template>
+</p-dialog>

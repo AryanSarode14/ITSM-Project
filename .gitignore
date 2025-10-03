@@ -1,0 +1,10 @@
+node_modules/
+*.sql
+*.zip
+.env
+config.json
+*.log
+package-lock.json
+.angular/
+dist/
+build/

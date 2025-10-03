@@ -1,0 +1,493 @@
+
+
+<div class="mb-2 pt-2 flex align-items-center justify-content-between">
+  <!-- Breadcrumb and Title -->
+  <div class="breadcrumb-container">
+    <i class="pi pi-home cursor-pointer" [routerLink]="['/admin/admin-dashboard']"></i>
+    <i class="pi pi-chevron-right mx-2"></i>
+    <span class="title font-bold">
+      Incident Management</span>
+  </div>
+
+
+
+  <!-- Add Button -->
+  <span>
+    <p-button label="Add Incident" icon="pi pi-plus" (click)="openDialogue()" severity="primary"></p-button>
+  </span>
+</div>
+
+<!-- <div>
+
+</div> -->
+
+<div class="tab-container">
+  <p-tabView class="custom-tabview" (onChange)="onTabChange($event)">
+    <p-tabPanel>
+      <ng-template pTemplate="header">
+        <div class="tab-header">
+          <i class="pi pi-users"></i>
+          <span>All Tickets</span>
+        </div>
+      </ng-template>
+      <ng-template pTemplate="content">
+        <!-- <app-incident-table></app-incident-table> -->
+        <app-dynamic-table [showEditButton]="false" [data]="AllTickets" (editClicked)="openEditDialogue($event)" [columns]="columns1" #dynamictable></app-dynamic-table>
+      </ng-template>
+    </p-tabPanel>
+
+    <p-tabPanel>
+      <ng-template pTemplate="header">
+        <div class="tab-header">
+          <i class="pi pi-user"></i>
+          <span>My Tickets</span>
+        </div>
+      </ng-template>
+      <ng-template pTemplate="content">
+        <app-dynamic-table [showEditButton]="false" [data]="myTickets" (editClicked)="openEditDialogue($event)" [columns]="columns3" #dynamictable></app-dynamic-table>
+      </ng-template>
+    </p-tabPanel>
+
+    <p-tabPanel>
+      <ng-template pTemplate="header">
+        <div class="tab-header">
+          <i class="pi pi-users"></i>
+          <span>Grouped Tickets</span>
+        </div>
+      </ng-template>
+      <ng-template pTemplate="content">
+        <app-dynamic-table [data]="groupedTickets" (editClicked)="openEditDialogue($event)" [columns]="columns1" #dynamictable></app-dynamic-table>
+      </ng-template>
+    </p-tabPanel>
+
+    <p-tabPanel>
+      <ng-template pTemplate="header">
+        <div class="tab-header">
+          <i class="pi pi-calendar"></i>
+          <span>Assigned Tickets</span>
+        </div>
+      </ng-template>
+      <ng-template pTemplate="content">
+        <app-dynamic-table [data]="assignTickets" (editClicked)="openEditDialogue($event)"  [columns]="columns" #dynamictable></app-dynamic-table>
+      </ng-template>
+    </p-tabPanel>
+
+    <p-tabPanel>
+      <ng-template pTemplate="header">
+        <div class="tab-header">
+          <i class="pi pi-clock"></i>
+          <span>On-Hold Tickets</span>
+        </div>
+      </ng-template>
+      <ng-template pTemplate="content">
+        <app-dynamic-table [data]="onHoldTickets" (editClicked)="openEditDialogue($event)"  [columns]="columns1" #dynamictable></app-dynamic-table>
+      </ng-template>
+    </p-tabPanel>
+
+    <p-tabPanel>
+      <ng-template pTemplate="header">
+        <div class="tab-header">
+          <i class="pi pi-check"></i>
+          <span>Closed Tickets</span>
+        </div>
+      </ng-template>
+      <ng-template pTemplate="content">
+        <app-dynamic-table [showViewButton]="true" [showEditButton]="false" [data]="closedTickets" (viewClicked)="openIncidentDetails($event)" [columns]="columns1"></app-dynamic-table>
+      </ng-template>
+    </p-tabPanel>
+  </p-tabView>
+</div>
+
+
+<p-dialog 
+  header="Incident Details" 
+  [(visible)]="incidenceDialouge2" 
+  [modal]="true" 
+  [responsive]="true" 
+  [style]="{ width: '700px' }"
+  class="incident-modal">
+
+  <ng-template pTemplate="content">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Ticket Details</h3>
+      </div>
+
+      <div class="modal-body">
+        <div class="detail-section">
+          <h4 class="section-title">Incident Information</h4>
+          <div class="detail-row">
+            <strong>Ticket ID:</strong>
+            <span class="detail-value">{{ incidentDetails?.incident_id }}</span>
+          </div>
+          <div class="detail-row">
+            <strong>Issue Description:</strong>
+            <span class="detail-value">{{ incidentDetails?.issue_description }}</span>
+          </div>
+          <div class="detail-row">
+            <strong>Status:</strong>
+            <span class="status-label" [ngClass]="getStatusClass(incidentDetails?.status_name)">
+              {{ getStatusText(incidentDetails?.status_name) }}
+            </span>
+          </div>
+        </div>
+
+        <div class="detail-section">
+          <h4 class="section-title">Call Information</h4>
+          <div class="detail-row">
+            <strong>SLA:</strong>
+            <span class="detail-value">{{ incidentDetails?.sla_time }}</span>
+          </div>
+          <div class="detail-row">
+            <strong>Call Type ID:</strong>
+            <span class="detail-value">{{ incidentDetails?.call_type_name }}</span>
+          </div>
+          <div class="detail-row">
+            <strong>Call Mode:</strong>
+            <span class="detail-value">{{ incidentDetails?.call_mode }}</span>
+          </div>
+          <div class="detail-row">
+            <strong>Priority:</strong>
+            <span class="detail-value">{{ incidentDetails?.priority_name }}</span>
+          </div>
+        </div>
+
+        <div class="detail-section">
+          <h4 class="section-title">Assigned Information</h4>
+          <div class="detail-row">
+            <strong>User Assigned To:</strong>
+            <span class="detail-value">{{ incidentDetails?.user_assigned_to_name }}</span>
+          </div>
+          <div class="detail-row">
+            <strong>User Opened By:</strong>
+            <span class="detail-value">{{ incidentDetails?.user_opened_by_name }}</span>
+          </div>
+          <div class="detail-row">
+            <strong>Support Group:</strong>
+            <span class="detail-value">{{ incidentDetails?.support_group_name }}</span>
+          </div>
+        </div>
+
+        <div class="detail-section">
+          <h4 class="section-title">Additional Information</h4>
+          <div class="detail-row">
+            <strong>CI Details:</strong>
+            <span class="detail-value">{{ incidentDetails?.ci_detail_name }}</span>
+          </div>
+          <div class="detail-row">
+            <strong>User:</strong>
+            <span class="detail-value">{{ incidentDetails?.user_initiator_name }}</span>
+          </div>
+        </div>
+
+        <!-- New Section for Log Notes -->
+        <div class="detail-section">
+          <h4 class="section-title">Log Notes</h4>
+          <div *ngFor="let log of logNotes" class="detail-row">
+            <span class="detail-value">{{ log.note }}</span>
+            <strong>{{ log.created_at  }}</strong>
+          </div>
+          
+        </div>
+
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template pTemplate="footer">
+    <button type="button" pButton label="Close" icon="pi pi-times" (click)="closeModal()" class="p-button-danger"></button>
+  </ng-template>
+</p-dialog>
+
+
+
+
+
+    
+<p-dialog [(visible)]="incidenceDialouge" [style]="{ width: '70%', height: '640px' }"  [closable]="false"  [modal]="true" styleClass="p-fluid">
+  <p-header class="font-medium"  *ngIf="!editUserId"> New Incident</p-header>
+  <p-header class="font-medium"  *ngIf="editUserId"> Update Incident</p-header>
+  <ng-template pTemplate="content">
+    <div class="formgrid grid mt-2">
+      <form [formGroup]="incidentFormData" class="grid gap-2">
+        <!-- Role & Group Information -->
+        <div class="col-12 md:col-12 lg:col-12">
+          <p-fieldset legend="Incident Details" [toggleable]="true">
+            <div class="grid">
+              <div class="col-12 md:col-4 my-3 p-float-label">
+                <input pInputText id="issue_description" formControlName="issue_description" autocomplete="off" />
+                <label for="issue_description">Issue Description <span class="required-asterisk">*</span></label>
+              </div>
+              <div class="col-12 md:col-4 my-3 p-float-label">
+                <p-dropdown id="call_mode_id" [options]="callMode" [disabled]="isCallModeReadOnly" formControlName="call_mode_id" optionValue="id" optionLabel="mode" placeholder="Select Call Mode" appendTo="body"></p-dropdown>
+                <label for="call_mode_id">Call Mode</label>
+              </div>
+              <div class="col-12 md:col-4 my-3 p-float-label">
+                <p-dropdown id="status_id" 
+                            [options]="statusList" 
+                            [disabled]="isCallModeReadOnly"
+                            formControlName="status_id" 
+                            optionValue="id" 
+                            optionLabel="status_name" 
+                            placeholder="Select Status" 
+                            appendTo="body"
+                            [readonly]="!editUserId">
+                </p-dropdown>
+                <label for="status_id">Status<span class="required-asterisk">*</span></label>
+              </div>
+              
+              <div class="col-12 md:col-4 my-3 p-float-label">
+                <p-dropdown id="priority_id" [options]="priorityList" formControlName="priority_id" optionValue="priority_id" optionLabel="priority_name" placeholder="Select Priority" appendTo="body"></p-dropdown>
+                <label for="priority_id">Priority<span class="required-asterisk">*</span></label>
+              </div>
+              <div class="col-12 md:col-4 my-3 p-float-label">
+                <p-dropdown id="call_type_id" [options]="callTypeList" formControlName="call_type_id" optionValue="id" optionLabel="call_type_name" placeholder="Select Call Type" appendTo="body">
+                  <ng-template pTemplate="header">
+                    <div class="p-text-center text-center my-1">
+                      <p-button  type="button" label="Add New " (click)="callTypeDialouge()" icon="pi pi-plus" 
+                             ></p-button>
+                    </div>
+                  </ng-template>
+
+                </p-dropdown>
+                <label for="call_type_id">Call Type <span class="required-asterisk">*</span></label>
+              </div>
+
+              <p-dialog [(visible)]="callTypeDialog" [style]="{ width: '30%'}" [closable]="false" [modal]="true" styleClass="p-fluid" appendTo="body">
+  
+                <p-header class="font-medium">New Call Type</p-header>
+                <ng-template pTemplate="content">
+                  <div class="formgrid mt-2">
+                    <form [formGroup]="callTypeFormData">
+                      <!-- CI Details -->
+                      <div class="col-12">
+                        <!-- <p-fieldset legend="Details" [toggleable]="true" styleClass="w-full"> -->
+                          <div class="grid">    
+                            <div class="col-12 md:col-12  p-float-label">
+                              <input pInputText id="call_type_name" formControlName="call_type_name" />
+                              <label for="call_type_name">Add Call Type  <span class="required-asterisk">*</span></label>
+                            </div>
+              
+                          
+                          </div>
+                        <!-- </p-fieldset> -->
+                      </div>
+                    </form>
+                  </div>
+                </ng-template>
+              
+                <ng-template pTemplate="footer">
+                  <p-button class="mr-4" icon="pi pi-times" label="Cancel" size="small" severity="secondary" (click)="callTypeDialog=false"></p-button>
+                  <p-button icon="pi pi-check" label="Add" size="small" severity="primary" [disabled]="callTypeFormData.invalid" (click)="addCallTypes()"  ></p-button>
+                
+                </ng-template>
+              </p-dialog>
+
+              <div class="col-12 md:col-4 my-3 p-float-label">
+                <p-dropdown id="sla_id" [options]="SLAList" formControlName="sla_id" optionValue="sla_id" optionLabel="sla_time" placeholder="Select SLA" appendTo="body">
+                  <ng-template pTemplate="header">
+                    <div class="p-text-center text-center my-1">
+                      <p-button  type="button" label="Add New " (click)="slaDialouge()" icon="pi pi-plus" 
+                             ></p-button>
+                    </div>
+                  </ng-template>
+
+                </p-dropdown>
+                <label for="sla_id">SLA <span class="required-asterisk">*</span></label>
+              </div>
+
+
+              <p-dialog [(visible)]="slaDialog" [style]="{ width: '30%'}" [closable]="false" [modal]="true" styleClass="p-fluid" appendTo="body">
+  
+                <p-header class="font-medium">New SLA</p-header>
+                <ng-template pTemplate="content">
+                  <div class="formgrid mt-2">
+                    <form [formGroup]="slaFormData">
+                      <!-- CI Details -->
+                      <div class="col-12">
+                        <!-- <p-fieldset legend="Details" [toggleable]="true" styleClass="w-full"> -->
+                          <div class="grid">    
+                            <div class="col-12 md:col-12  p-float-label">
+                              <input pInputText id="sla_time" formControlName="sla_time" />
+                              <label for="sla_time">Add New SLA  <span class="required-asterisk">*</span></label>
+                            </div>
+              
+                          
+                          </div>
+                        <!-- </p-fieldset> -->
+                      </div>
+                    </form>
+                  </div>
+                </ng-template>
+              
+                <ng-template pTemplate="footer">
+                  <p-button class="mr-4" icon="pi pi-times" label="Cancel" size="small" severity="secondary" (click)="slaDialog=false"></p-button>
+                  <p-button icon="pi pi-check" label="Add" size="small" severity="primary" [disabled]="slaFormData.invalid" (click)="addSla()"  ></p-button>
+                
+                </ng-template>
+              </p-dialog>
+
+
+              <div class="col-12 md:col-4 my-3 p-float-label">
+                <p-dropdown id="user_id" 
+                            [options]="empNameList" 
+                            formControlName="initiated_for_user_id" 
+                            optionValue="user_id" 
+                            optionLabel="full_name" 
+                            placeholder="Select Employee Name" 
+                            appendTo="body"
+                            (onChange)="onEmployeeChange($event.value)
+                            "
+                            [readonly]="editUserId">
+                </p-dropdown>
+                <label for="user_id">Employee Name <span class="required-asterisk">*</span></label>
+              </div>
+        
+
+              <div class="col-12 md:col-4 my-3 p-float-label">
+                <p-dropdown id="asset_id" 
+                            [options]="AffectedProductList" 
+                            formControlName="ci_details_id" 
+                            optionValue="ci_id" 
+                            optionLabel="ci_name" 
+                            placeholder="Select Affected Product" 
+                            appendTo="body" 
+                            [readonly]="editUserId">
+                </p-dropdown>
+                <label for="asset_id">Select Affected Product <span class="required-asterisk">*</span></label>
+              </div>
+
+              <div class="col-12 md:col-4 my-3 p-float-label" *ngIf="editUserId">
+                <p-dropdown id="assignto" 
+                            [options]="empNameList" 
+                            formControlName="user_assigned_to_id" 
+                            optionValue="user_id" 
+                            optionLabel="full_name" 
+                            placeholder="Select Assign Name" 
+                            appendTo="body"
+                            >
+                </p-dropdown>
+                <label for="assignto">Assign To <span class="required-asterisk">*</span></label>
+              </div>
+
+              <div class="col-12 md:col-4 my-3 p-float-label">
+                <p-dropdown id="support_group_id" [options]="supportGroupList" formControlName="support_group_id" optionValue="support_group_id" optionLabel="support_group_name" placeholder="Select Support Group" appendTo="body"></p-dropdown>
+                <label for="support_group_id">Support Group <span class="required-asterisk">*</span></label>
+              </div>
+            </div>
+
+         
+          </p-fieldset><br>
+
+          <p-fieldset legend="Notes" [toggleable]="true" *ngIf="editUserId">
+            <div class="grid">
+              <!-- Previous Notes field (readonly text field) -->
+              <div class="col-12 md:col-12 my-3 p-float-label">
+                <textarea 
+                  style="height: 100px;"
+                  pInputText 
+                  formControlName="prev_note" 
+                  id="prev_note" 
+                  readonly 
+                  placeholder="Previous Notes">
+                </textarea>
+                <label for="prev_note">Previous Notes</label>
+              </div>
+          
+              <!-- Log Notes field (editable text field) -->
+              <div class="col-12 md:col-12 my-3 p-float-label">
+                <textarea 
+                  style="height: 100px;"
+                  pInputTextarea 
+                  formControlName="log_notes" 
+                  id="log_notes" 
+                  placeholder="Enter Log Notes">
+                </textarea>
+                <label for="log_notes">Log Notes<span class="required-asterisk">*</span></label>
+              </div>
+            </div>
+          </p-fieldset><br>
+
+          <p-fieldset legend="Attachments" [toggleable]="true">
+            <div class="grid">
+              <div class="col-12 md:col-4 my-3">
+                <div class="file-input-container">
+                  <p-button 
+                    icon="pi pi-paperclip" 
+                    label="Attach File" 
+                    (click)="fileInput.click()" 
+                    styleClass="p-button-outlined" 
+                  ></p-button>
+                  <input 
+                    type="file" 
+                    #fileInput 
+                    style="display: none;" 
+                    (change)="onFileSelect($event)" 
+                  />
+                  <input 
+                    type="text" 
+                    [value]="selectedFileName || 'No file selected'" 
+                    readonly 
+                    placeholder="No file selected" 
+                    class="p-inputtext" 
+                    style="flex: 1; margin-left: 10px;" 
+                  />
+                </div>
+          
+                
+              </div>
+            </div>
+          </p-fieldset><br>
+          <p-fieldset legend="Uploaded Attachments" [toggleable]="true" *ngIf="uploadedAttachments.length > 0">
+            <div class="grid">
+              <div class="col-12 my-3">
+                <!-- Display uploaded attachments -->
+                <div class="uploaded-attachments">
+                  <ul class="attachment-list">
+                    <li *ngFor="let attachment of uploadedAttachments" class="attachment-item">
+                      <span>{{ attachment.name }}</span>
+                      <div class="attachment-actions">
+                        <p-button 
+                          icon="pi pi-eye" 
+                          (click)="viewAttachment(attachment)" 
+                          styleClass="p-button-success" 
+                          label="View" 
+                          class="attachment-view-button"
+                        ></p-button>
+                        <p-button 
+                          icon="pi pi-times" 
+                          (click)="removeAttachment(attachment)" 
+                          styleClass="p-button-danger" 
+                          label="Remove" 
+                          class="attachment-remove-button"
+                        ></p-button>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </p-fieldset>          
+<!-- 
+          <p-fieldset legend="Additional Details" [toggleable]="true">
+            <div class="grid">
+              <div class="col-12 md:col-4 my-3">
+                <div class="p-float-label custom-attachment">
+                  <input type="file" id="files" formControlName="files" (change)="onFileSelect($event)" class="p-inputtext p-component" />
+                  <label for="files">Add Attachment (Optional)</label>
+                </div>
+              </div>
+            </div>
+          </p-fieldset> -->
+
+        </div>
+      </form>
+    </div>
+  </ng-template>
+
+  <ng-template pTemplate="footer">
+    <p-button class="mr-4" icon="pi pi-times" label="Cancel" size="small" severity="secondary" (click)="incidenceDialouge=false"></p-button>
+    <p-button icon="pi pi-check" label="Save" size="small" severity="primary"  *ngIf="!editUserId" [disabled]="this.incidentFormData.invalid" (click)="onSubmit()"></p-button>
+    <p-button icon="pi pi-check" label="Update" size="small" severity="primary"  *ngIf="editUserId"  (click)="onUpdate()"></p-button>
+  </ng-template>
+</p-dialog>

@@ -1,0 +1,69 @@
+
+
+.loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white background */
+  z-index: 1000; /* Make sure it's on top of other content */
+}
+
+ 
+  
+  @media (max-width: 768px) {
+    // .user-management {
+    //   padding: 10px;
+    // }
+  
+    // .title {
+    //   font-size: 20px;
+    // }
+  
+ 
+    // th, td {
+    //   font-size: 13px;
+    //   padding: 6px;
+    // }
+  
+    // .icon-cell svg {
+    //   width: 20px;
+    //   height: 20px;
+    // }
+  }
+  
+ 
+  
+  @media (max-width: 768px) {
+
+  }
+
+  .mb-2 {
+    margin-bottom: 1rem;
+  }
+  
+  .required-asterisk {
+    color: red;
+  }
+  
+  .p-fieldset {
+    margin-bottom: 1.5rem;
+  }
+  
+  .p-fieldset .p-fieldset-content {
+    padding: 1rem;
+  }
+  
+  p-dialog .p-fluid .grid {
+    gap: 1rem;
+  }
+
+  .p-float-label > label{
+    left: 1.75rem !important;
+  }
+  
+  

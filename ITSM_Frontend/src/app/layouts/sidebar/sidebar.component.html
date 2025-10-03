@@ -1,0 +1,171 @@
+<!-- 
+<div class="sidebar" [ngClass]="{ 'collapsed': collapsed  }">
+  <div class="flex align-items-center gap-4">
+    <span class="toggle-button" (click)="onToggle()">
+      <i class="toggle-icon pi" [ngClass]="getToggleIcon()"></i> 
+    </span>
+    <p id="title" class="my-0" >ITSM</p>
+  </div>
+   -->
+
+<div class="sidebar" [ngClass]="{ collapsed: collapsed }">
+  <!-- Sidebar Header -->
+  <div class="sidebar-header">
+    <span class="sidebar-title" *ngIf="!collapsed">ITSM</span>
+    <span class="toggle-button" (click)="onToggle()" style="cursor: pointer">
+      <i
+        class="toggle-icon pi"
+        [ngClass]="getToggleIcon()"
+        style="cursor: pointer"
+      ></i>
+      <!-- Close icon -->
+    </span>
+  </div>
+
+  <!-- Sidebar Menu -->
+
+  <ul class="menu">
+    <li
+      routerLink="/admin/admin-dashboard"
+      (click)="checkIfMobile()"
+      [pTooltip]="collapsed && !isMobile ? ' Dashboard' : ''"
+      tooltipPosition="right"
+    >
+      <a>
+        <i class="pi pi-home"></i>
+        <span>Dashboard</span>
+      </a>
+    </li>
+    <li
+      routerLink="/admin/user-management"
+      *ngIf="this.currentRole == 'Administrator'"
+      (click)="checkIfMobile()"
+      [pTooltip]="collapsed && !isMobile ? 'User Management' : ''"
+      tooltipPosition="right"
+    >
+      <a>
+        <i class="pi pi-th-large"></i>
+        <span>User Management</span>
+      </a>
+    </li>
+    <li
+      [routerLink]="
+        parsedUserData.role == 'Administrator' ||
+        parsedUserData.role == 'ITSupport Admin'
+          ? '/admin/asset-management'
+          : '/admin/user-assets'
+      "
+      (click)="checkIfMobile()"
+      [pTooltip]="collapsed && !isMobile ? ' Asset Management' : ''"
+      tooltipPosition="right"
+    >
+      <a>
+        <i class="pi pi-pencil"></i>
+        <span>Asset Management</span>
+      </a>
+    </li>
+    <!-- <li routerLink="/admin/user-assets" (click)="checkIfMobile()" [pTooltip]="collapsed && !isMobile ? ' Asset Management' : ''"  tooltipPosition="right" *ngIf="isVisible">
+      <a>
+        <i class="pi pi-pencil"></i>
+        <span>Asset Management</span>
+      </a>
+    </li> -->
+    <li
+      routerLink="/admin/CI-management"
+      (click)="checkIfMobile()"
+      [pTooltip]="collapsed && !isMobile ? ' CI Management' : ''"
+      tooltipPosition="right"
+    >
+      <a>
+        <i class="pi pi-chart-line"></i>
+        <span>CI Management</span>
+      </a>
+    </li>
+    <li
+      routerLink="/admin/incident"
+      (click)="checkIfMobile()"
+      [pTooltip]="collapsed && !isMobile ? ' Incident Management' : ''"
+      tooltipPosition="right"
+    >
+      <a>
+        <i class="pi pi-table"></i>
+        <span>Incident Management</span>
+      </a>
+    </li>
+    <li
+      routerLink="/admin/hr-management"
+      (click)="checkIfMobile()"
+      [pTooltip]="collapsed && !isMobile ? ' HR Management' : ''"
+      tooltipPosition="right"
+    >
+      <a>
+        <i class="pi pi-tags"></i>
+        <span>HR Management</span>
+      </a>
+    </li>
+    <li
+      routerLink="/admin/service-management"
+      *ngIf="this.currentRole == 'ITSupport Admin' || 'Administrator'"
+      (click)="checkIfMobile()"
+      [pTooltip]="collapsed && !isMobile ? ' Service Management' : ''"
+      tooltipPosition="right"
+    >
+      <a>
+        <i class="pi pi-users"></i>
+        <span>Service Management</span>
+      </a>
+    </li>
+    <li
+      routerLink="/admin/problem-management"
+      *ngIf="this.currentRole == 'ITSupport Admin' || 'Administrator'"
+      (click)="checkIfMobile()"
+      [pTooltip]="collapsed && !isMobile ? ' Problem Management' : ''"
+      tooltipPosition="right"
+    >
+      <a>
+        <i class="pi pi-wrench"></i>
+        <span>Problem Management</span>
+      </a>
+    </li>
+    <li
+      routerLink="/admin/change-management"
+      *ngIf="this.currentRole == 'ITSupport Admin' || 'Administrator'"
+      (click)="checkIfMobile()"
+      [pTooltip]="collapsed && !isMobile ? ' Change  Management' : ''"
+      tooltipPosition="right"
+    >
+      <a>
+        <i class="pi pi-ticket"></i>
+        <span>Change Management</span>
+      </a>
+    </li>
+    <li
+      routerLink="/admin/end-point-devices"
+      *ngIf="this.currentRole == 'Administrator'"
+      (click)="checkIfMobile()"
+      [pTooltip]="collapsed && !isMobile ? ' End Point Devices' : ''"
+      tooltipPosition="right"
+    >
+      <a>
+        <i class="pi pi-desktop"></i>
+        <span>End Point Devices</span>
+      </a>
+    </li>
+    <li
+      routerLink="/admin/chart"
+      (click)="checkIfMobile()"
+      [pTooltip]="collapsed && !isMobile ? ' Organization Chart' : ''"
+      tooltipPosition="right"
+    >
+      <a>
+        <i class="pi pi-exclamation-triangle"></i>
+        <span>Organization Chart</span>
+      </a>
+    </li>
+  </ul>
+
+  <!-- Sidebar Footer -->
+  <div class="sidebar-footer" *ngIf="CompanyCredit">
+    <p>Designed & Developed by: Augmented Transformations</p>
+  </div>
+</div>

@@ -1,0 +1,47 @@
+<div class="header">
+  <div class="left-section">
+    <span class="toggle-button" (click)="toggleSidebar()" *ngIf="!isMobile">
+      <i class="pi" [ngClass]="isCollapsed ? 'pi-bars' : 'pi-bars'"></i>
+    </span>
+    <span
+      class="toggle-button"
+      (click)="toggleMobileSidebar()"
+      *ngIf="isMobile"
+    >
+      <i class="pi" [ngClass]="isCollapsed ? 'pi-bars' : 'pi-bars'"></i>
+    </span>
+    <div class="logo">ITSM</div>
+    <!-- <div class="logo"><img src="../../../assets/images/itsm_logo.jpeg" alt="itsm-logo" width="45"></div> -->
+  </div>
+
+  <div class="user-actions">
+    <span class="mr-4">{{currentDateTime}}</span>
+    <p-avatar
+      *ngIf="user?.profile; else defaultAvatar"
+      [styleClass]="'mr-2 avatar'"
+      [style]="{ cursor: 'pointer' }"
+      shape="circle"
+      (click)="menu.toggle($event)"
+    >
+      <img
+        [src]="user?.profile"
+        alt="User Avatar"
+        style="border-radius: 50%; width: 100%; height: 100%"
+      />
+    </p-avatar>
+
+    <ng-template #defaultAvatar>
+      <p-avatar
+        icon="pi pi-user"
+        styleClass="mr-2 avatar"
+        [style]="{ cursor: 'pointer' }"
+        shape="circle"
+        (click)="menu.toggle($event)"
+      >
+      </p-avatar>
+    </ng-template>
+
+    <p-menu #menu [model]="items" [popup]="true" appendTo="body"></p-menu>
+  </div>
+</div>
+<app-sidebar #SidebarComponent *ngIf="isMobile"></app-sidebar>

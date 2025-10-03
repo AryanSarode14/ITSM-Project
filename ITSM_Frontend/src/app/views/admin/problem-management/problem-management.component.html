@@ -1,0 +1,600 @@
+<span>
+  <div
+    class="mb-3 pt-3 flex align-items-center justify-content-between flex-wrap"
+  >
+    <!-- Breadcrumb and Title -->
+    <div class="breadcrumb-container">
+      <i
+        class="pi pi-home cursor-pointer"
+        [routerLink]="['/admin/admin-dashboard']"
+      ></i>
+      <i class="pi pi-chevron-right mx-2"></i>
+      <span class="title font-bold">Problem Management</span>
+    </div>
+
+    <!-- Buttons Container -->
+    <div
+      class="button-group flex align-items-center justify-content-end flex-wrap mt-2 md:mt-0"
+    >
+      <!-- Add Asset Button -->
+      <p-button
+        label="New Problem"
+        icon="pi pi-plus"
+        (click)="openDialogue()"
+        severity="primary"
+        class="mr-2 mb-2 md:mb-0"
+      ></p-button>
+    </div>
+  </div>
+</span>
+<app-dynamic-table
+  [showEditButton]="true"
+  [showViewButton]="true"
+  [data]="problemListData"
+  [columns]="columns"
+  (viewClicked)="openProblemReqDetails($event)"
+  (editClicked)="openEditDialogue($event)"
+  #dynamictable
+></app-dynamic-table>
+<!-- Edit and add user management dialog -->
+<p-dialog
+  [(visible)]="problemCreateDialouge"
+  [style]="{ width: '60%', maxWidth: '900px' }"
+  [closable]="false"
+  [modal]="true"
+  styleClass="p-fluid"
+  appendTo="body"
+>
+  <p-header class="font-medium" *ngIf="!editProblemId">New Problem</p-header>
+  <p-header class="font-medium" *ngIf="editProblemId">Update Problem</p-header>
+
+  <ng-template pTemplate="content">
+    <div class="formgrid grid mt-2">
+      <form [formGroup]="problemForm" class="grid gap-2">
+        <!-- Name Fields Group -->
+        <div class="col-12 md:col-12 lg:col-12">
+          <p-fieldset legend="Problem Information" [toggleable]="true">
+            <div class="grid">
+              <div class="col-12 md:col-4 my-3 p-float-label">
+                <input
+                  pInputText
+                  id="description"
+                  autocomplete="off"
+                  formControlName="description"
+                />
+                <label for="description"
+                  >Problem Statement<span class="required-asterisk"
+                    >*</span
+                  ></label
+                >
+              </div>
+              <div class="col-12 md:col-4 my-3 p-float-label">
+                <p-dropdown
+                  formControlName="related_incident"
+                  [options]="incidentData"
+                  optionLabel="issue_description"
+                  optionValue="incident_id"
+                  placeholder="Select related incident"
+                >
+                </p-dropdown>
+                <label for="related_incident"
+                  >Related Incident<span class="required-asterisk"
+                    >*</span
+                  ></label
+                >
+              </div>
+              <div class="col-12 md:col-4 my-3 p-float-label">
+                <p-dropdown
+                  formControlName="category_id"
+                  [options]="categoryList"
+                  optionLabel="category_name"
+                  optionValue="category_id"
+                  placeholder="Select Category"
+                >
+                </p-dropdown>
+                <label for="category"
+                  >Select Category<span class="required-asterisk"
+                    >*</span
+                  ></label
+                >
+              </div>
+              <div class="col-12 md:col-4 my-3 p-float-label">
+                <p-dropdown
+                  formControlName="service_id"
+                  [options]="services"
+                  optionLabel="service_name"
+                  optionValue="service_id"
+                  placeholder="Select Service"
+                >
+                </p-dropdown>
+                <label for="service_id"
+                  >Select Service<span class="required-asterisk">*</span></label
+                >
+              </div>
+              <div class="col-12 md:col-4 my-3 p-float-label">
+                <p-dropdown
+                  formControlName="configuration_item_id"
+                  [options]="ciListData"
+                  optionLabel="ci_name"
+                  optionValue="ci_id"
+                  placeholder="Select Configuration Item"
+                >
+                </p-dropdown>
+                <label for="configuration_item_id"
+                  >Select Configuration Item<span class="required-asterisk"
+                    >*</span
+                  ></label
+                >
+              </div>
+              <div class="col-12 md:col-4 my-3 p-float-label">
+                <p-dropdown
+                  formControlName="sla_id"
+                  [options]="allslas"
+                  optionLabel="sla_time"
+                  optionValue="sla_id"
+                  placeholder="Select SLA"
+                >
+                </p-dropdown>
+                <label for="sla_id"
+                  >Select SLA<span class="required-asterisk">*</span></label
+                >
+                <small
+                  *ngIf="
+                    problemForm.get('sla_id')?.touched &&
+                    problemForm.get('sla_id')?.hasError('required')
+                  "
+                  class="p-error"
+                  >SLA is required.</small
+                >
+              </div>
+              <div class="col-12 md:col-4 my-3 p-float-label">
+                <p-dropdown
+                  formControlName="support_group_id"
+                  [options]="supportgroups"
+                  optionLabel="support_group_name"
+                  optionValue="support_group_id"
+                  placeholder="Select Support Group"
+                >
+                </p-dropdown>
+                <label for="support_group_id"
+                  >Select Support Group<span class="required-asterisk"
+                    >*</span
+                  ></label
+                >
+                <small
+                  *ngIf="
+                    problemForm.get('support_group_id')?.touched &&
+                    problemForm.get('support_group_id')?.hasError('required')
+                  "
+                  class="p-error"
+                  >Support Group is required.</small
+                >
+              </div>
+
+              <div class="col-12 md:col-4 my-3 p-float-label">
+                <p-dropdown
+                  formControlName="priority_id"
+                  [options]="priorityList"
+                  optionLabel="priority_name"
+                  optionValue="priority_id"
+                  placeholder="Select Priority"
+                >
+                </p-dropdown>
+                <label for="priority_id"
+                  >Priority<span class="required-asterisk">*</span></label
+                >
+                <small
+                  *ngIf="
+                    problemForm.get('priority_id')?.touched &&
+                    problemForm.get('priority_id')?.hasError('required')
+                  "
+                  class="p-error"
+                  >Priority is required.</small
+                >
+              </div>
+              <div class="col-12 md:col-4 my-3 p-float-label">
+                <p-dropdown
+                  formControlName="impact_id"
+                  [options]="impactListData"
+                  optionLabel="impact_level"
+                  optionValue="impact_id"
+                  placeholder="Select Impact"
+                >
+                </p-dropdown>
+                <label for="impact_id"
+                  >Impact<span class="required-asterisk">*</span></label
+                >
+                <small
+                  *ngIf="
+                    problemForm.get('impact_id')?.touched &&
+                    problemForm.get('impact_id')?.hasError('required')
+                  "
+                  class="p-error"
+                  >Support Group is required.</small
+                >
+              </div>
+              <div class="col-12 md:col-4 my-3 p-float-label">
+                <p-dropdown
+                  formControlName="state_id"
+                  [options]="stateListData"
+                  optionLabel="state_name"
+                  optionValue="state_id"
+                  placeholder="Select State"
+                >
+                </p-dropdown>
+                <label for="state_id"
+                  >State<span class="required-asterisk">*</span></label
+                >
+                <small
+                  *ngIf="
+                    problemForm.get('state_id')?.touched &&
+                    problemForm.get('state_id')?.hasError('required')
+                  "
+                  class="p-error"
+                  >State is required.</small
+                >
+              </div>
+              <div class="col-12 md:col-4 my-3 p-float-label">
+                <p-dropdown
+                  formControlName="created_by"
+                  [options]="owners"
+                  optionLabel="full_name"
+                  optionValue="user_id"
+                  placeholder="Select User"
+                >
+                </p-dropdown>
+                <label for="created_by"
+                  >Reported By<span class="required-asterisk">*</span></label
+                >
+              </div>
+
+              <div
+                class="col-12 md:col-4 my-3 p-float-label"
+                *ngIf="editProblemId"
+              >
+                <p-dropdown
+                  formControlName="assigned_to_id"
+                  [options]="assignedToList"
+                  optionLabel="full_name"
+                  optionValue="user_id"
+                  placeholder="Select Assigned To"
+                >
+                </p-dropdown>
+                <label for="assigned_to_id"
+                  >Assigned To<span class="required-asterisk">*</span></label
+                >
+              </div>
+              <div
+                class="col-12 md:col-4 my-3 p-float-label"
+                *ngIf="editProblemId"
+              >
+                <input
+                  pInputText
+                  id="root_cause"
+                  autocomplete="off"
+                  formControlName="root_cause"
+                />
+                <label for="root_cause">Root Cause<span class="required-asterisk">*</span></label>
+              </div>
+              <div
+                class="col-12 md:col-4 my-3 p-float-label"
+                *ngIf="editProblemId"
+              >
+                <input
+                  pInputText
+                  id="work_around"
+                  autocomplete="off"
+                  formControlName="work_around"
+                />
+                <label for="work_around">Work Around</label>
+              </div>
+            </div>
+          </p-fieldset>
+        </div>
+        <div class="col-12 md:col-12 lg:col-12" *ngIf="editProblemId">
+          <p-fieldset legend="Log Notes" [toggleable]="true">
+            <div class="grid">
+              <div class="col-12 md:col-12 my-3 p-float-label">
+                <textarea
+                  rows="5"
+                  cols="30"
+                  pInputTextarea
+                  [readonly]="true"
+                  formControlName="prev_notes"
+                >
+                </textarea>
+                <label for="prev_notes">Prev. Notes</label>
+              </div>
+            </div>
+            <div class="grid">
+              <div class="col-12 md:col-12 my-3 p-float-label">
+                <textarea
+                  rows="5"
+                  cols="30"
+                  pInputTextarea
+                  formControlName="log_note"
+                >
+                </textarea>
+                <label for="log_note"
+                  >Log Notes<span class="required-asterisk">*</span></label
+                >
+              </div>
+            </div>
+          </p-fieldset>
+        </div>
+        <div class="col-12 md:col-12 lg:col-12">
+          <p-fieldset legend="Attachments" [toggleable]="true">
+            <div class="grid">
+              <div class="col-12 md:col-12 px-2 py-1">
+                <div *ngFor="let selected of listOfFiles; let index = index">
+                  <div class="panel panel-default mt-2">
+                    <div class="panel-body">
+                      <h3 class="label">
+                        {{ selected }}
+                        <button
+                          (click)="removeSelectedFile(index)"
+                          class="remove-btn pull-right"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="16"
+                            height="16"
+                            fill="currentColor"
+                            class="bi bi-x-circle-fill"
+                            viewBox="0 0 16 16"
+                          >
+                            <path
+                              d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"
+                            />
+                          </svg>
+                        </button>
+                      </h3>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="grid">
+              <div class="col-12 md:col-4 my-3">
+                <div class="file-input-container">
+                  <p-button
+                    icon="pi pi-paperclip"
+                    label="Attach File"
+                    (click)="fileInput.click()"
+                    styleClass="p-button-outlined"
+                  ></p-button>
+                  <input
+                    type="file"
+                    #fileInput
+                    style="display: none"
+                    multiple="true"
+                    (change)="onFileSelect($event)"
+                  />
+                </div>
+              </div>
+            </div>
+            <!-- <hr class="mx-3 mb-0" *ngIf="editProblemId" />
+            <div
+              class="grid mt-3"
+              *ngIf="editProblemId && this.attachments.length > 0"
+            >
+              <div class="sm:col-12 md:col-12 px-4">
+                <h4 class="m-0">
+                  <u><strong>Attachments</strong></u> :-
+                </h4>
+                <br />
+
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th scope="col">Name</th>
+                      &nbsp;
+                      <th scope="col">View</th>
+                      &nbsp;
+                      <th scope="col">Download</th>
+                      &nbsp;
+                      <th scope="col">Delete</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let item of attachments; let index = index">
+                      <th class="mt-2" scope="grid">{{ item.file_name }}</th>
+                      &nbsp;
+                      <td>
+                        <button type="button" (click)="openDoc(item.file_path)">
+                          <i class="pi pi-eye"></i>
+                        </button>
+                      </td>
+
+                      &nbsp;
+                      <td>
+                        <button
+                          type="button"
+                          (click)="downloadPdf(item.file_path, item.file_name)"
+                        >
+                          <i class="pi pi-cloud-download"></i>
+                        </button>
+                      </td>
+                      &nbsp;
+                      <td>
+                        <button
+                          tooltip="Delete File"
+                          type="button"
+                          (click)="delete(item.attachment_id, index)"
+                        >
+                          <i class="pi pi-trash"></i>
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div> -->
+          </p-fieldset>
+        </div>
+      </form>
+    </div>
+  </ng-template>
+
+  <ng-template pTemplate="footer">
+    <p-button
+      class="mr-4"
+      icon="pi pi-times"
+      label="Cancel"
+      size="small"
+      severity="secondary"
+      (click)="problemCreateDialouge = false"
+    ></p-button>
+    <p-button
+      icon="pi pi-check"
+      label="Save"
+      size="small"
+      severity="primary"
+      *ngIf="!editProblemId"
+      (click)="saveProblem()"
+      [disabled]="problemForm.invalid"
+    ></p-button>
+    <p-button
+      icon="pi pi-check"
+      label="Update"
+      size="small"
+      severity="primary"
+      *ngIf="editProblemId"
+      (click)="onUpdate()"
+      [disabled]="problemForm.invalid"
+    ></p-button>
+
+    <!-- <p-button class="mr-4" icon="pi pi-times" label="Cancel" size="small" severity="secondary" (click)="userDialouge=false"></p-button> -->
+    <!-- <p-button icon="pi pi-check" label="Save" size="small" severity="primary" (click)="onSubmit()"></p-button> -->
+  </ng-template>
+</p-dialog>
+
+<!-- view details of problem management -->
+
+<p-dialog
+  header="Problem Management Details"
+  [(visible)]="problemDetailsDialog"
+  [modal]="true"
+  [maximizable]="true"
+  [responsive]="true"
+  [closable]="false"
+  [style]="{ width: '850px' }"
+  class="problem-management-dialog"
+>
+  <ng-template pTemplate="content">
+    <div class="problem-details-container">
+      <!-- Title Section -->
+      <div class="details-header">
+        <h3 class="page-title">Problem Management Overview</h3>
+      </div>
+
+      <!-- Card-based Detail Sections -->
+      <div class="detail-card">
+        <h4 class="card-title">
+          <i class="pi pi-cog"></i> Problem Information
+        </h4>
+
+        <div class="details-row">
+          <strong
+            >Problem ID:
+            <span class="mx-2">
+              <u>{{ problemDetails?.problem_id || "--" }} </u></span
+            >
+          </strong>
+          <!-- <span>{{ problemDetails?.affected_product_name || '--' }}</span> -->
+        </div>
+        <div class="details-row">
+          <strong>Problem Statement:</strong>
+          <span>{{ problemDetails?.description || "--" }}</span>
+        </div>
+        <div class="details-row">
+          <strong>Related Incident:</strong>
+          <span>{{ problemDetails?.issue_description || "--" }}</span>
+        </div>
+        <div class="details-row">
+          <strong>Reported By:</strong>
+          <span>{{ problemDetails?.created_by_name || "--" }}</span>
+        </div>
+        <div class="details-row">
+          <strong>Category:</strong>
+          <span>{{ problemDetails?.category_name || "--" }}</span>
+        </div>  
+        <div class="details-row">
+          <strong>Service Name:</strong>
+          <span>{{ problemDetails?.service_name || "--" }}</span>
+        </div>
+        <div class="details-row">
+          <strong>Affected Product:</strong>
+          <span>{{ problemDetails?.configuration_item_name || "--" }}</span>
+        </div>
+        <div class="details-row">
+          <strong>Impact:</strong>
+          <span>{{ problemDetails?.impact_level || "--" }}</span>
+        </div>
+        <div class="details-row">
+          <strong>Priority:</strong>
+          <span>{{ problemDetails?.priority_name || "--" }}</span>
+        </div>
+        <div class="details-row">
+          <strong>Assigned To:</strong>
+          <span>{{ problemDetails?.assigned_to_name || "--" }}</span>
+        </div>
+        <div class="details-row">
+          <strong>Root Cause:</strong>
+          <span>{{ problemDetails?.root_cause!="null"?problemDetails?.root_cause:"--"}}</span>
+        </div>
+        <div class="details-row">
+          <strong>Work Around:</strong>
+          <span>{{problemDetails?.work_around!="null"?problemDetails?.work_around:"--"}}</span>
+        </div>
+      </div>
+
+
+
+      <div class="detail-card">
+        <div class="card-header d-flex align-items-center">
+          <h4 class="card-title mb-0 me-2">
+            <i class="pi pi-paperclip"></i> Attachments
+          </h4>
+        </div>
+        <div class="card-body">
+          <div *ngIf="problemDetails?.attachments && problemDetails.attachments.length > 0; else noAttachments">
+              <table class="table table-bordered">
+                  <thead>
+                      <tr>
+                          <th>File Name</th>
+                          <th>Actions</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      <tr *ngFor="let attachment of problemDetails.attachments;let i = index">
+                          <td>
+                             {{i+1}}. {{ attachment.file_path.split('/').pop() }} <!-- Display file name -->
+                          </td>
+                          <td>
+                              <i class="pi pi-eye text-primary mx-2" pTooltip="View" style="cursor: pointer;" (click)="openDoc(attachment.file_path)" title="View Attachment"></i>
+                              <i class="pi pi-download text-success ms-2 mx-2" pTooltip="Download" style="cursor: pointer;" (click)="downloadPdf(attachment.file_path,attachment.file_name)" title="Download Attachment"></i>
+                          </td>
+                      </tr>
+                  </tbody>
+              </table>
+          </div>
+          <ng-template #noAttachments>
+              <p class="text-muted">No attachments available</p>
+          </ng-template>
+      </div>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template pTemplate="footer">
+    <button
+      type="button"
+      pButton
+      label="Close"
+      icon="pi pi-times"
+      (click)="problemDetailsDialog = false"
+      class="p-button-secondary"
+    ></button>
+  </ng-template>
+</p-dialog>

@@ -1,0 +1,126 @@
+/* Base Styles */
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: 'Poppins', sans-serif;
+    background-color: #f0f4f8;
+  }
+  
+  .register-container {
+    display: flex;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+  }
+  
+  .image-container {
+    display: none;
+  }
+  
+  /* Image Styling */
+  .image-container img {
+    width: 100%;
+    height: auto;
+    border-radius: 20px;
+    object-fit: cover;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Form Container */
+  .form-container {
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 450px;
+  }
+  
+  /* Headline */
+  h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 28px;
+    color: #34495e;
+  }
+  
+  /* Form Groups */
+  .form-group {
+    margin-bottom: 20px;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #34495e;
+    font-weight: 600;
+  }
+  
+  .form-group input {
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid #dfe6e9;
+    font-size: 16px;
+    background-color: #ecf0f1;
+    transition: background-color 0.3s ease;
+  }
+  
+  .form-group input:focus {
+    background-color: #ffffff;
+    border-color: #3498db;
+  }
+  
+  /* Submit Button */
+  button {
+    width: 100%;
+    padding: 15px;
+    border: none;
+    border-radius: 10px;
+    background-color: #3498db;
+    color: white;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+  }
+  
+  button:hover {
+    background-color: #2980b9;
+  }
+  
+  button:disabled {
+    background-color: #bdc3c7;
+    cursor: not-allowed;
+  }
+  
+  /* Media Queries for Responsiveness */
+  @media (min-width: 992px) {
+    .register-container {
+      max-width: 1200px;
+    }
+  
+    .image-container {
+      flex: 1;
+      display: block;
+      margin-right: 50px;
+    }
+  
+    .form-container {
+      flex: 1;
+    }
+  }
+  
+  @media (max-width: 991px) {
+    .register-container {
+      flex-direction: column;
+    }
+  
+    .image-container {
+      display: none;
+    }
+  }
+  

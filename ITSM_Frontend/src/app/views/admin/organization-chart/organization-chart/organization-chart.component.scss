@@ -1,0 +1,191 @@
+/* Main background color */
+.company-organization {
+    background-color: #f0f0f0; /* Light gray */
+    // padding: 1rem; /* Reduced padding for a compact layout */
+  }
+  
+  :host ::ng-deep .pTooltip {
+    background-color: white !important;  /* Set the background color to white */
+    color: #333 !important;              /* Set text color to a darker shade for visibility */
+    border-radius: 4px !important;       /* Optional: add some rounding to the corners */
+    border: 1px solid #ddd !important;   /* Optional: add a light border */
+    padding: 10px !important;            /* Optional: increase padding */
+    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1) !important; /* Optional: add subtle shadow */
+  }
+  
+  /* Optional: Override the arrow (triangle) of the tooltip */
+  :host ::ng-deep .p-tooltip-arrow {
+    border-top-color: white !important;  /* Ensure the arrow color matches the background */
+  }
+
+  :host::ng-deep .p-organizationchart .p-organizationchart-node-content {
+    // border: 1px solid #dee2e6;
+    background: #ffffff;
+    color: #212529;
+    border: none !important;
+    padding: 4px;
+    cursor: pointer;
+}
+:host::ng-deep .p-dialog .p-dialog-header {
+  // padding: 0.5rem;
+  // border-bottom: 1px solid #e9ecef !important;
+  background: #4a74bd !important;
+  // color: #ffffff !important;
+}
+  /* Card styles */
+  .p-person {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    // padding: 0.75rem; /* Reduced padding for smaller card size */
+    border-radius: 6px;
+    border: none;
+    color: #ffffff; /* Default text color to white */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); /* Prominent box shadow */
+    width: 9rem; /* Default width */
+    margin: 0; /* No margin to remove gap between cards */
+    // transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  /* Hover effect */
+  .p-person:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.25); /* Stronger shadow on hover */
+  }
+  
+  /* Profile image styles */
+  .profile-image {
+    width: 82px;
+    height: 72px;
+    border-radius: 50%;
+    margin-bottom: 0.4rem;
+    margin-top: -17px;
+    // border: 2px solid #ffffff; /* White border around the image */
+  }
+  
+  /* Person info styles */
+  .person-info {
+    text-align: center;
+    margin-bottom: 0.5rem; /* Reduced margin */
+    color: #433b3b;
+  }
+  
+  .person-name {
+    font-size: 1rem; /* Slightly smaller font size */
+    font-weight: bold;
+  }
+  
+  .person-title {
+    font-size: 0.8rem; /* Smaller font size */
+    margin-top: 0.2rem;
+    color: #433b3b;
+  }
+  
+  /* Button styles */
+  .profile-button {
+    margin-top: 0.4rem;
+    border-radius: 4px;
+    background-color: #ffffff;
+    border-color: #ffffff;
+    color: #333;
+    font-size: 0.75rem; /* Slightly smaller button font size */
+    // padding: 0.25rem 0.5rem; /* Reduced padding for the button */
+  }
+  
+  .profile-button:hover {
+    background-color: #e0e0e0;
+    border-color: #e0e0e0;
+  }
+  
+  /* Dialog Content Styles */
+  .dialog-content {
+    display: flex;
+    align-items: center;
+    // padding: 1rem;
+  }
+  
+  .dialog-profile-image {
+    width: 100px; /* Smaller image size */
+    height: 100px; /* Smaller image size */
+    border-radius: 50%;
+    margin-right: 1rem; /* Space between image and text */
+    // border: 2px solid #ddd; /* Optional border for better appearance */
+  }
+  
+  .dialog-text {
+    display: flex;
+    flex-direction: column;
+  }
+  :host::ng-deep .p-dialog .p-dialog-footer {
+    border-top: 1px solid #e9ecef;
+    background: #ffffff;
+    color: #212529;
+    padding: 1rem;
+    text-align: right;
+    border-bottom-right-radius: 4px;
+    border-bottom-left-radius: 4px;
+    display: flex;
+    justify-content: center;
+  }
+  /* Mobile responsiveness */
+  @media (max-width: 768px) {
+    .p-organizationchart .p-organizationchart-node-content{
+      border: none;
+    }
+    .p-person {
+      width: 8rem; /* Smaller width on mobile */
+      padding: 0.5rem; /* Reduced padding */
+    }
+  
+    .profile-image {
+      width: 35px; /* Smaller image size on mobile */
+      height: 35px;
+    }
+  
+    .person-name {
+      font-size: 0.9rem; /* Smaller font size on mobile */
+    }
+  
+    .person-title {
+      font-size: 0.7rem; /* Smaller font size on mobile */
+    }
+  
+    .profile-button {
+      font-size: 0.7rem; /* Smaller button font size on mobile */
+      padding: 0.2rem 0.4rem; /* Reduced button padding on mobile */
+    }
+  
+  
+  }
+  
+  @media (max-width: 480px) {
+    .p-person {
+      width: 100%; /* Full width on very small screens */
+      padding: 0.25rem; /* Further reduced padding */
+    }
+  
+    .profile-image {
+      width: 30px; /* Even smaller image size on very small screens */
+      height: 30px;
+    }
+  
+    .person-name {
+      font-size: 0.8rem; /* Smaller font size on very small screens */
+    }
+  
+    .person-title {
+      font-size: 0.6rem; /* Smaller font size on very small screens */
+    }
+  
+    .profile-button {
+      font-size: 0.6rem; /* Smaller button font size on very small screens */
+      padding: 0.15rem 0.3rem; /* Further reduced button padding */
+    }
+  
+    .dialog-profile-image {
+      width: 30px; /* Adjusted image size on very small screens */
+      height: 30px;
+    }
+  }
+  

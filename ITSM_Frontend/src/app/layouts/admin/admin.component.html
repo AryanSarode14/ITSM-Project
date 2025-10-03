@@ -1,0 +1,12 @@
+<header>
+  <app-header (toggle)="toggleSidebar()"></app-header>
+</header>
+<div class="app-wrapper">
+  <aside [ngClass]="{'collapsed': isSidebarCollapsed}">
+    <app-sidebar [collapsed]="isSidebarCollapsed" (toggle)="toggleSidebar()"></app-sidebar>
+  </aside>
+
+  <main class="main-content" [ngClass]="{'full-width': isSidebarCollapsed}">
+    <router-outlet></router-outlet>
+  </main>
+</div>

@@ -1,0 +1,304 @@
+.sidebar {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #007bff, #1C2A48);
+  color: #ffffff;
+  width: 16rem;
+  height: 100vh; /* Take full height */
+  position: fixed;
+  top: 0; /* Adjust to start from the top */
+  left: 0;
+  transition: width 0.3s ease-in-out, left 0.3s ease-in-out;
+  overflow: hidden;
+  z-index: 1000;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.backicon {
+  display: none;
+}
+
+#title {
+  font-size: 26px;
+    padding-top: 4px;
+}
+
+.sidebar.collapsed {
+  width: 4rem;
+}
+
+.menu .collapsed {
+  margin-left: 0;
+}
+
+.sidebar.collapsed .menu li a span {
+  display: none;
+}
+
+.menu {
+  list-style-type: none;
+  padding: 0;
+  margin: 20px 0;
+  margin-left: 7px;
+}
+
+.menu li {
+  padding: 15px;
+  display: flex;
+  align-items: center;
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s;
+  position: relative;
+  cursor: pointer;
+}
+
+.menu li:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 5px;
+  background-color: transparent;
+  transition: background-color 0.3s ease;
+}
+
+.menu li a {
+  color: #ffffff;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  transition: transform 0.3s ease;
+}
+
+.menu li a i {
+  margin-right: 15px;
+  font-size: 20px;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.menu li a span {
+  white-space: nowrap;
+  font-size: 14px;
+  transition: color 0.3s ease;
+}
+
+/* Hover Effects */
+.menu li:hover {
+  background-color: rgba(255, 255, 255, 0.1); /* Subtle light hover effect */
+  border-radius: 10px;
+  transform: translateX(5px); /* Slight slide to the right */
+}
+
+.menu li:hover:before {
+  background-color: #E3F2FD; /* Gold highlight bar on hover */
+}
+
+.menu li:hover a i {
+  color: #E3F2FD; /* Gold icon on hover */
+  transform: scale(1.2); /* Slightly enlarge icon */
+}
+
+.menu li:hover a span {
+  color: #E3F2FD; /* Gold text on hover */
+}
+
+.menu li:hover a {
+  transform: translateX(5px); /* Shift text and icon to the right */
+}
+
+/* Sidebar Toggle Button */
+
+.toggle-button i {
+  font-size: 20px;
+  transition: transform 0.3s ease;
+  
+}
+
+.toggle-button i:hover {
+  transform: rotate(180deg); /* Rotate on hover */
+}
+
+.toggle-icon.mobile-bars {
+  color: #052c65; /* Specific color for pi-bars when collapsed in mobile view */
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 60px;
+    background-color: #1C2A48;
+    left: -250px;
+  }
+  .sidebar.collapsed .menu li a span  {
+    display: block;
+ 
+  }
+
+  .menu{
+    margin: 44px 20px;
+  }
+  .menu li a span{
+    font-size: 20px;
+  }
+  
+  .sidebar.collapsed {
+    width: 100%;
+    top: 0;
+    left: 0;
+  }
+  
+  .backicon {
+    display: block;
+    color: white;
+    justify-content: flex-end;
+    display: flex;
+  }
+  
+  .menu li a i {
+    color: #fff;
+  }
+  
+  .menu li a span {
+    color: #fff;
+  }
+  
+  .sidebar.collapsed .menu li a span {
+    display: block;
+  }
+
+  // .toggle-button {
+  //   position: fixed;
+  //   left: 10px;
+  //   top: 15px;
+  //   z-index: 1100;
+  // }
+}
+
+@media (max-width: 480px) {
+  .sidebar {
+    // top: 85px; /* Adjust for smaller header */
+    border-radius: 10px;
+  }
+}
+
+/* Sidebar Layout */
+.sidebar {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #007bff, #1C2A48);
+  color: #ffffff;
+  width: 16rem;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  transition: width 0.3s ease-in-out, left 0.3s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+}
+
+/* Sidebar Header */
+.sidebar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  background-color: rgba(0, 123, 255, 0.8); /* Slightly darker blue */
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.sidebar-title {
+  color: #ffffff;
+}
+
+.toggle-button i {
+  font-size: 20px;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+/* Sidebar Menu */
+.menu {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  flex-grow: 1; /* Takes up remaining space */
+  overflow-y: auto; /* Scrollable if content exceeds height */
+  overflow-x: hidden; /* Prevent horizontal scroll */
+}
+
+.menu li {
+  padding: 13px;
+  display: flex;
+  align-items: center;
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s;
+}
+
+.menu li a {
+  color: #ffffff;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  transition: transform 0.3s ease;
+}
+
+.menu li:hover {
+  background-color: rgba(255, 255, 255, 0.1); /* Subtle hover effect */
+  transform: translateX(5px); /* Slide to the right on hover */
+}
+
+.menu li:hover a i {
+  color: #E3F2FD;
+  transform: scale(1.2);
+}
+
+/* Sidebar Footer */
+.sidebar-footer {
+  padding: 1px  12px;
+  text-align: center;
+  background-color: rgba(0, 123, 255, 0.26); /* Slightly darker blue */
+  font-size: 12px;
+  color: #c9c7c7;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .sidebar {
+    display: none;
+    width: 50px;
+    height: 100%;
+  }
+  .sidebar.collapsed {
+    display: block;
+    width: 100%;
+    left: 0;
+  }
+  .sidebar-title{
+    display: none;
+  }
+  .sidebar-footer{
+    display: none;
+  }
+}
+
+.menu::-webkit-scrollbar-track
+{
+	// border: 1px solid rgb(16, 145, 237);
+	background-color: #1C2A48;
+}
+
+.menu::-webkit-scrollbar
+{
+	width: 10px;
+	background-color: #e21616;
+}
+
+.menu::-webkit-scrollbar-thumb
+{
+	background-color: linear-gradient(135deg, #007bff, #1C2A48);	
+}
+

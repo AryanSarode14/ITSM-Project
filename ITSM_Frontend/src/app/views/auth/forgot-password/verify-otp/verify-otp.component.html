@@ -1,0 +1,54 @@
+<div class="forgot-password-wrapper">
+  <div class="forgot-password-card">
+    <img class="forgot-password-image" src="../../../../../assets/images/verifyotpbg.png" alt="Forgot Password" />
+    <p>Enter the OTP and then create a new password.</p>
+
+    <form [formGroup]="forgotPasswordForm" (ngSubmit)="onSubmit()">
+      <!-- Email Field -->
+      <div class="input-group">
+        <i class="pi pi-envelope"></i>
+        <input type="email" formControlName="email" placeholder="E-mail" readonly />
+      </div>
+
+      <!-- OTP Field -->
+      <div class="input-group">
+        <i class="pi pi-key"></i>
+        <input type="text" formControlName="otp" placeholder="OTP" />
+      </div>
+
+      <!-- New Password Field -->
+      <div class="input-group">
+        <i class="pi pi-lock"></i>
+        <input 
+          type="password" 
+          formControlName="newPassword" 
+          placeholder="New Password" 
+          (change)="checkPasswordsMatch()"  
+        />
+      </div>
+
+      <!-- Confirm Password Field -->
+      <div class="input-group mb-1">
+        <i class="pi pi-lock"></i>
+        <input 
+          type="password" 
+          formControlName="confirmPassword" 
+          placeholder="Confirm Password" 
+          (change)="checkPasswordsMatch()"  
+        />
+      </div>
+
+      <!-- Password Mismatch Error -->
+      <div *ngIf="mismatch" class="error-message my-2">
+        Passwords do not match.
+      </div>
+
+      <!-- Loading Spinner -->
+      <p-progressSpinner *ngIf="isLoading" styleClass="spinner" strokeWidth="2"></p-progressSpinner>
+
+      <!-- Submit Button -->
+      <button class="mt-2" pButton type="submit" label="Submit" [disabled]="isLoading">
+      </button>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,111 @@
+<div class="dashboard-container">
+  <!-- Top Info Cards Section -->
+  <div class="info-cards">
+    <div class="info-card">
+      <div class="icon"><i class="pi pi-users"></i></div>
+      <div class="info-content">
+        <h2>{{this.userData?.user_count}}</h2>
+        <p>Users</p>
+      </div>
+    </div>
+    <div class="info-card">
+      <div class="icon purple"><i class="pi pi-desktop"></i></div>
+      <div class="info-content">
+        <h2>{{this.assetData?.asset_count}}</h2>
+        <p>Assets</p>
+      </div>
+    </div>
+    <div class="info-card">
+      <div class="icon green"><i class="pi pi-exclamation-triangle"></i></div>
+      <div class="info-content">
+        <h2> {{this.incidentData?.incident_count}}</h2>
+        <p>Incidents</p>
+      </div>
+    </div>
+    <div class="info-card">
+      <div class="icon"><i class="pi pi-clipboard"></i></div>
+      <div class="info-content">
+        <h2>{{this.incidentData?.unassignment_count}}</h2>
+        <p>Unassigned Open Requests</p>
+      </div>
+    </div>
+    <!-- <div class="info-card">
+      <div class="icon blue"><i class="pi pi-check"></i></div>
+      <div class="info-content">
+        <h2>2</h2>
+        <p>Approvals</p>
+      </div>
+    </div> -->
+  </div>
+
+  <!-- Chart Section -->
+  <div class="chart-grid">
+    <div class="chart-card">
+      <h4 class="my-0">Users <span style="float: right;">  <button pButton type="button" *ngIf="this.currentRole=='Administrator'"  class="py-1" label="View All Users" (click)="viewAllUsers()"></button></span></h4>
+      <p-chart type="line" [data]="callModeLineChartData" height="220px" [options]="lineChartOptions"></p-chart>
+      <!-- View All Users Button -->
+      <div class="view-all-btn">
+      </div>
+    </div>
+  
+
+    <div class="chart-card">
+      <h4 class="my-0 pb-3 ">Assets Overview</h4>
+      <p-chart class="mt-4 " type="doughnut" [data]="assetsOverviewData" [options]="chartOptions"></p-chart>
+    </div>
+    <div class="chart-card">
+      <h4 class="my-0 pb-3 ">Assets by status</h4>
+      <p-chart class="mt-4 " type="doughnut" [data]="assetsByStatus" [options]="chartOptions"></p-chart>
+
+    </div>
+    <div class="chart-card">
+      <h4 class="my-0">Asset By Category</h4>
+      <p-chart type="bar" [data]="incidentTypesData" height="230px" [options]="incidentOptions"></p-chart>
+
+    </div>
+
+
+    <div class="chart-card">
+      <h4 class="my-0"> Call Types</h4>
+      <p-chart type="pie" [data]="callTypesData" [options]="chartOptions"></p-chart>
+    </div>
+    <div class="chart-card">
+      <h4 class="my-0">Call Modes</h4>
+      <p-chart type="pie" [data]="callModesData" [options]="chartOptions"></p-chart>
+    </div>
+    <div class="chart-card">
+      <div class="flex justify-content-between align-items-start">
+        <h4 class="my-0">SLA Overview</h4>
+        <p-dropdown [options]="filterOptions" optionValue="value" optionLabel="id" [filter]="false" filterBy="value"
+          [showClear]="true" placeholder="Select filter" autocomplete="off" (onChange)="onChangeSLA($event)">
+        </p-dropdown>
+      </div>  
+      <div class="flex justify-content-center align-items-start mt-2" *ngIf="showSLAChartFilter">
+        <p-calendar #SLACalendar [(ngModel)]="rangeSLADates" selectionMode="range" [touchUI]="true"
+          [readonlyInput]="true" [showIcon]="true" class="me-2">
+          <ng-template pTemplate="header">
+            <div class="text-right">
+              <p-button icon="pi pi-times" [text]="true" severity="danger" [rounded]="true"
+                (onClick)="closeSLACalendar()"></p-button>
+            </div>
+          </ng-template>
+          <ng-template pTemplate="footer">
+            <div class="text-right">
+              <p-button icon="pi pi-refresh" [text]="true" severity="primary"
+                (onClick)="dataBetweenSLADates()"></p-button>
+            </div>
+          </ng-template>
+        </p-calendar>
+      </div>
+      <p-chart type="doughnut" [data]="slaOverviewData" [options]="chartOptions"></p-chart>
+    </div>
+    <div class="chart-card">
+      <h4 class="my-0">Open requests by priority</h4>
+      <p-chart type="polarArea" [data]="openIncidentsbyPriority" [options]="chartOptions"></p-chart>
+    </div>
+    </div>
+
+ 
+   
+  </div>
+

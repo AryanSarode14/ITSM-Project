@@ -1,0 +1,71 @@
+/* Basic Grid Layout for the App Wrapper */
+.app-wrapper {
+  display: flex; /* Use flexbox for better layout control */
+  margin-top: 40px;
+}
+
+/* Sidebar Styles */
+aside {
+  width: 240px; /* Default sidebar width */
+  // background-color: #333; /* Sidebar color */
+  color: white;
+  transition: width 0.3s ease; /* Smooth transition */
+}
+
+/* Collapsed Sidebar Styles */
+aside.collapsed {
+  width: 0; /* Collapse the sidebar */
+  overflow: hidden; /* Hide overflow */
+}
+
+/* Main Content Styles */
+.main-content {
+  width: 600px;
+  flex-grow: 1; /* Allow main content to grow */
+  padding: 20px; /* Default padding */
+  transition: margin-left 0.3s ease; /* Smooth transition */
+}
+
+/* Full width when sidebar is collapsed */
+.full-width {
+  // margin-top: 2px;
+  margin-left: 65px; /* Remove margin on collapse */
+  padding: 20px; /* Add padding when sidebar is collapsed */
+}
+
+/* Optional: Hide the sidebar content when collapsed */
+aside.collapsed .sidebar-content {
+  display: none; /* Hide content when collapsed */
+}
+
+/* Header Styles */
+header {
+  background-color: #f8f9fa;
+  padding: 10px;
+  text-align: center;
+  position: sticky;
+  top: 0;
+  z-index: 999; /* Ensure it stays on top */
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  aside {
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100%;
+    z-index: 1000;
+    width: 0px; /* Sidebar width for mobile */
+  }
+
+  aside.collapsed {
+    width: 0; /* Hide sidebar on collapse */
+  }
+
+  .main-content {
+    width: 100%;
+    // margin-left: 50px; /* Ensure full width on mobile */
+    // padding: 20px; /* Maintain padding on mobile */
+  }
+}

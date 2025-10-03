@@ -1,0 +1,251 @@
+.custom-attachment {
+    position: relative;
+    margin-top: 1rem;
+  }
+  
+  .custom-attachment label {
+    position: absolute;
+    top: -0.75rem;
+    left: 0.5rem;
+    background-color: white;
+    padding: 0 0.25rem;
+    font-size: 0.9rem;
+    color: #666;
+  }
+  
+  .custom-attachment input[type="file"] {
+    border: 1px solid #ccc;
+    padding: 0.5rem;
+    font-size: 0.9rem;
+    width: 100%;
+    border-radius: 4px;
+  }
+  .label {
+    font-size: 14px;
+  }
+
+  .file-input-container {
+    display: flex;
+    align-items: center; /* Align items vertically */
+  }
+.user-management {
+    padding: 20px;
+    background-color: #f9f9f9;
+  }
+  
+  .title {
+    font-size: 1rem;
+    font-weight: bold;
+    // margin-bottom: 10px;
+  }
+  
+
+  .search-input {
+    width: 100%;
+    max-width: 300px;
+  }
+  
+  .p-table {
+    width: 100%;
+    overflow-x: auto;
+  }
+  
+  th {
+    padding: 8px;
+    font-size: 15px;
+    // background-color: #afb8bb;
+    color: rgb(26, 23, 23);
+    text-align: left;
+  }
+  
+  td {
+    padding: 8px;
+    font-size: 14px;
+    text-align: left;
+  }
+  
+  .icon-cell {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .verified-status {
+    font-weight: bold;
+  }
+  
+  @media (max-width: 768px) {
+    .user-management {
+      padding: 10px;
+    }
+  
+    .title {
+      font-size: 20px;
+    }
+  
+  
+  
+    th, td {
+      font-size: 13px;
+      padding: 6px;
+    }
+  
+    .icon-cell svg {
+      width: 20px;
+      height: 20px;
+    }
+  }
+  
+ 
+  
+  @media (max-width: 768px) {
+   
+  }
+
+  /* Ensure full width for buttons in mobile view */
+@media (max-width: 768px) {
+  .p-dialog .p-fluid .p-button {
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+}
+
+/* Custom styles for the modal */
+.custom-dialog {
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+.custom-file-upload {
+  border: 1px solid #dcdcdc;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  padding: 10px;
+}
+
+.panel {
+  margin-bottom: 6px !important;
+}
+
+.panel-body {
+  background-color: #e6e4e4;
+  height: 40px;
+  padding: 5px 5px 5px 5px;
+}
+
+.remove-btn {
+  outline: none;
+  border: none;
+  float: right;
+  background-color: #e6e4e4;
+}
+:host ::ng-deep .buttonHeight {
+  height: 28px !important;
+  border: 2px solid none;
+  border-radius: 10px;
+}
+  
+  
+
+.change-management-dialog .change-details-container {
+  padding: 20px;
+  font-family: 'Roboto', sans-serif;
+  background-color: #f4f6f9;
+  border-radius: 8px;
+}
+
+.page-title {
+  font-size: 1.75rem;
+  text-align: center;
+  color: #1e88e5;
+  margin-bottom: 20px;
+}
+
+.detail-card {
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  padding: 15px 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s;
+}
+
+.detail-card:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.card-title {
+  font-size: 1.25rem;
+  color: #1e88e5;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+}
+
+.card-title i {
+  margin-right: 10px;
+  font-size: 1.5rem;
+  color: #1976d2;
+}
+
+.details-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.details-row:last-child {
+  border-bottom: none;
+}
+
+.details-row strong {
+  color: #444;
+  font-weight: 600;
+}
+
+.details-row span {
+  color: #333;
+  font-weight: 500;
+}
+
+.status-label {
+  padding: 5px 10px;
+  border-radius: 4px;
+  text-transform: capitalize;
+  color: white;
+}
+
+.status-open {
+  background-color: #4caf50;
+}
+
+.status-closed {
+  background-color: #f44336;
+}
+
+.status-on-hold {
+  background-color: #f5b222;
+}
+
+.status-in-progress {
+  background-color: #0abff7;
+}
+
+.ui-button-danger {
+  background-color: #f44336;
+  border-radius: 4px;
+  padding: 10px 20px;
+  color: #fff;
+}
+
+.badge-button-container{
+  position: relative !important;
+}
+
+.badge-count {
+  position: absolute;
+  top: -13px;
+  right: 10px;
+  z-index: 1;
+}

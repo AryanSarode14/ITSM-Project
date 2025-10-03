@@ -1,0 +1,28 @@
+<div class="register-container">
+    <div class="image-container">
+      <img src="../../../../../assets/images/register image.png" alt="Register Image" />
+    </div>
+    <div class="form-container">
+      <h2>Create an Account</h2>
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+          <label for="name">Full Name</label>
+          <input id="name" formControlName="name" type="text" placeholder="Enter your full name" />
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input id="email" formControlName="email" type="email" placeholder="Enter your email" />
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input id="password" formControlName="password" type="password" placeholder="Enter your password" />
+        </div>
+        <div class="form-group">
+          <label for="confirm-password">Confirm Password</label>
+          <input id="confirm-password" formControlName="confirmPassword" type="password" placeholder="Confirm your password" />
+        </div>
+        <button type="submit" [disabled]="registerForm.invalid">Register</button>
+      </form>
+    </div>
+  </div>
+  

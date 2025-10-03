@@ -1,0 +1,101 @@
+.user-management {
+    padding: 20px;
+    background-color: #f9f9f9;
+  }
+  
+  .title {
+    font-size: 1rem;
+    font-weight: bold;
+    // margin-bottom: 10px;
+  }
+  
+
+  .search-input {
+    width: 100%;
+    max-width: 300px;
+  }
+  
+  .p-table {
+    width: 100%;
+    overflow-x: auto;
+  }
+  
+  th {
+    padding: 8px;
+    font-size: 15px;
+    // background-color: #afb8bb;
+    color: rgb(26, 23, 23);
+    text-align: left;
+  }
+  
+  td {
+    padding: 8px;
+    font-size: 14px;
+    text-align: left;
+  }
+  
+  .icon-cell {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .verified-status {
+    font-weight: bold;
+  }
+  
+  @media (max-width: 768px) {
+    .user-management {
+      padding: 10px;
+    }
+  
+    .title {
+      font-size: 20px;
+    }
+  
+  
+  
+    th, td {
+      font-size: 13px;
+      padding: 6px;
+    }
+  
+    .icon-cell svg {
+      width: 20px;
+      height: 20px;
+    }
+  }
+  
+ 
+  
+  @media (max-width: 768px) {
+   
+  }
+
+  /* Ensure full width for buttons in mobile view */
+@media (max-width: 768px) {
+  .p-dialog .p-fluid .p-button {
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+}
+
+/* Custom styles for the modal */
+.custom-dialog {
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+.custom-file-upload {
+  border: 1px solid #dcdcdc;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  padding: 10px;
+}
+.change-management-dialog .change-details-container {
+  padding: 20px;
+  font-family: 'Roboto', sans-serif;
+  background-color: #f4f6f9;
+  border-radius: 8px;
+}
+  
+  

@@ -1,0 +1,69 @@
+<div class="px-2">
+  <div class="grid">
+    <div class="col-12 sm:col-12 lg:col-12 xl:col-12 p-2">
+      <div
+        class="p-6 border-1 surface-card border-round border-black-400 shadow-2 mt-2"
+      >
+        <p-card>
+          <div class="profile-header">
+            <p-avatar shape="circle" icon="pi pi-user" 
+            styleClass="mr-2"
+            size="large" 
+            [style]="{ 'background-color': '#ece9fc', color: '#2a1261' }"></p-avatar>
+            <h2>{{ name }}</h2>
+            <p><strong>{{ user.email }}</strong></p>
+          </div>
+          <div   class="mb-3 pt-3 flex align-items-center justify-content-between">
+            <!-- Breadcrumb and Title -->
+            <div class="breadcrumb-container">
+              <i class="pi pi-home cursor-pointer" [routerLink]="['/admin/admin-dashboard']"></i>
+              <i class="pi pi-chevron-right mx-2"></i>
+              <span class="title font-bold">My Profile</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p-button label="Edit User" icon="pi pi-pencil"  severity="primary"></p-button>
+
+            </div>
+          
+            <!-- Add Button -->
+          </div>
+          <div class="profile-info">
+            <div class="grid ml-6">
+             <div class="col-12 md:col-4">
+                <h3>First Name</h3>
+                <p>{{ user.firstName }}</p>
+                <h3>Designation</h3>
+                <p>{{ user.role }}</p>
+              </div>
+
+               <div class="col-12 md:col-4">
+                <h3>Last Name</h3>
+                <p>{{ user.lastName }}</p>
+                <h3>Mobile Number</h3>
+                <p>{{ user.mobileNumber }}</p>
+              </div>
+
+              <div class="col-12 md:col-4">
+                <h3>Email ID</h3>
+                <p>{{ user.email }}</p>
+                <h3>Reporting To</h3>
+                <p>{{ user.reportingTo }}</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- <div class="profile-edit">
+      <h3>Edit Profile</h3>
+      <div>
+        <label>Name</label>
+        <input pInputText [(ngModel)]="user.name" />
+      </div>
+      <div>
+        <label>Email</label>
+        <input pInputText [(ngModel)]="user.email" />
+      </div>
+      <button pButton label="Save" (click)="saveProfile()"></button>
+    </div> -->
+        </p-card>
+      </div>
+    </div>
+  </div>
+</div>

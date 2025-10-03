@@ -1,0 +1,139 @@
+.pi-home {
+    font-size: 20px;
+}
+
+.head {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.label {
+    font-weight: bold;
+    font-size: 14px;
+}
+:host ::ng-deep .p-dialog .p-dialog-header {
+    font-size: 18px;
+    height: 35px;
+    background-color: #82B1FF !important;
+    color: #000;
+  }
+  /* Styling the table */
+table {
+    width: 100%;
+    border-collapse: collapse; /* Merge borders */
+    margin: 20px 0; /* Add some space above and below */
+    font-family: Arial, sans-serif; /* Change font */
+  }
+  
+  /* Styling table headers */
+  th, td {
+    border: 1px solid #ddd; /* Add border to cells */
+    padding: 12px; /* Add padding for spacing */
+    text-align: left; /* Align text to the left */
+  }
+  
+  /* Header background color */
+  th {
+    background-color:#82B1FF; /* Green background */
+    color: white; /* White text */
+  }
+  
+  /* Hover effect for rows */
+  tr:hover {
+    background-color: #f1f1f1; /* Light grey on hover */
+  }
+  
+  /* First column styling */
+  td:first-child {
+    font-weight: bold; /* Make the key column bold */
+  }
+  
+  /* Responsive styling */
+  @media (max-width: 600px) {
+    table, thead, tbody, th, td, tr {
+      display: block; /* Make it block for smaller screens */
+    }
+  
+    th {
+      position: absolute; /* Positioning for better mobile view */
+      top: -9999px; /* Hide header in mobile view */
+      left: -9999px; /* Hide header in mobile view */
+    }
+  
+    tr {
+      margin-bottom: 15px; /* Space between rows */
+    }
+  
+    td {
+      text-align: right; /* Align text to the right */
+      padding-left: 50%; /* Space on the left */
+      position: relative; /* Positioning */
+    }
+  
+    td::before {
+      position: absolute; /* Position before pseudo-element */
+      left: 0; /* Align to left */
+      width: 50%; /* Width for label */
+      padding-left: 10px; /* Space for labels */
+      white-space: nowrap; /* Prevent wrapping */
+      font-weight: bold; /* Bold for labels */
+    }
+  }
+  .panel {
+    margin-bottom: 6px !important;
+  }
+  
+  .panel-body {
+    background-color: #e6e4e4;
+    height: 40px;
+    padding: 5px 5px 5px 5px;
+  }
+  .hide-dropdown {
+    display: none !important;
+  }
+  .show-dropdown {
+    display: inline-block !important;
+  }
+  :host::ng-deep .p-dialog .p-dialog-footer button {
+    margin: 0 0.5rem 0 0 !important;
+    width: auto;
+  }
+  .remove-btn {
+    outline: none;
+    border: none;
+    float: right;
+    background-color: #e6e4e4;
+  }
+
+/* for uploading file */
+
+.file-upload-container {
+  display: flex;
+  align-items: center;
+}
+
+.file-label {
+  padding: 10px 20px;
+  cursor: pointer;
+  background-color:gray; /* Green background */
+  color: white; /* White text */
+  border-radius: 5px; /* Rounded corners */
+  margin-right: 10px; /* Space between label and button */
+}
+
+
+.upload-button:disabled {
+  background-color: #cccccc; /* Gray background when disabled */
+  cursor: not-allowed; /* Not-allowed cursor */
+}
+
+.custom-card-height {
+  height: 1300px; /* Set your desired height */
+}
+  
+.custom-card-header {
+  background-color: #9da8a0; /* Example background color */
+  color: white; /* Text color */
+  padding: 1rem; /* Padding around the header */
+  border-radius: 5px; /* Rounded corners */
+}

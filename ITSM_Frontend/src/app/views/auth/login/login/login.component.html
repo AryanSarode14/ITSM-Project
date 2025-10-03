@@ -1,0 +1,145 @@
+<div class="login-wrapper">
+  <div class="login-card">
+    <div class="login-card-left">
+      <img class="forgot-password-image" src="../../../../../assets/images/loginpagebg.png" alt="Forgot Password" />
+      <h3>Sign in to your account</h3>
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+
+        <!-- Email input -->
+        <div class="input-group">
+          <span class="p-input-icon-left">
+            <i class="pi pi-envelope"></i>
+            <input 
+              pInputText
+              type="email" 
+              formControlName="email" 
+              placeholder="E-mail" 
+              autocomplete="email" 
+              class="input-full-width"
+            />
+          </span>
+        </div>
+        <div *ngIf="loginForm.controls['email'].invalid && loginForm.controls['email'].touched" class="error-message">
+          <span *ngIf="loginForm.controls['email'].errors?.['required']">E-mail is required.</span>
+          <span *ngIf="loginForm.controls['email'].errors?.['email']">Please enter a valid e-mail.</span>
+        </div>
+
+        <!-- Password input -->
+        <div class="input-group mt-3">
+          <span class="p-input-icon-left">
+            <i class="pi pi-lock"></i>
+            <input
+              pInputText
+              formControlName="password"
+              placeholder="Password"
+              inputStyleClass="input-full-width"
+              autocomplete="current-password"
+            />
+          </span>
+        </div>
+        <div *ngIf="loginForm.controls['password'].invalid && loginForm.controls['password'].touched" class="error-message">
+          <span *ngIf="loginForm.controls['password'].errors?.['required']">Password is required.</span>
+          <span *ngIf="loginForm.controls['password'].errors?.['minlength']">Password must be at least 5 characters.</span>
+        </div>
+
+        <div class="my-2">
+          <a href="#" class="forgot-password" routerLink="/auth/forgot-password">Forgot password?</a>
+        </div>
+
+        <div class="spinner-container" *ngIf="isLoading">
+          <p-progressSpinner styleClass="spinner" strokeWidth="2"></p-progressSpinner>
+        </div>
+
+        <button pButton type="submit" label="Sign In" [disabled]="isLoading || loginForm.invalid"></button>
+      </form>
+    </div>
+  </div>
+  <div id="helpdesk" >
+
+    <img src="../../../../../assets/images/chatbot.png" alt="Help Icon"  pTooltip="Raise an Issue" class="button-image" (click)="openSupportPopup()"/>
+    <p-button
+    class=" "
+    severity="warning"
+    [label]="label1"
+    id="helpdesk-popup-button"
+    [raised]="true"
+    [rounded]="true" 
+    [loading]="loading"
+    type="submit"
+    badge="?"
+    icon="pi pi-qusetion"
+    (onClick)="openSupportPopup()"
+    
+  ></p-button>
+    <div class="container-fluid">
+    
+        <div id="helpdesk-popup" [style.display]="isOpen ? 'block' : 'none'">
+          <div id="helpdesk-popup-header">
+            ITSMServiceERP
+            <button
+              id="helpdesk-popup-close-button"
+              (click)="openSupportPopup()"
+            >
+              Close
+            </button>
+            <!-- <button pButton icon="pi pi-close" id="helpdesk-popup-close-button" (click)="openSupportPopup()"></button> -->
+
+          </div>
+          <div id="helpdesk-popup-body">
+            <div class="messages" #scrollMe>
+              <div *ngFor="let message of messages" class="message">
+                <div [class]="message.messageType">
+                  <div [innerHTML]="message.message"></div>
+                </div>
+                <div class="button-container" *ngIf="message.options">
+                  <p-button
+                    label="{{option}}"
+                    class="mt-2"
+                    size="small"
+                    severity="info"
+                    *ngFor="let option of message.options"
+                    (click)="handleOptionSelection(option,message.type,message.srNo)"
+                  ></p-button>
+                </div>
+              </div>
+              <div
+                *ngIf="loading"
+                class="message"
+                style="width: 100%; display: block">
+                <div [class]="'client'">...</div>
+              </div>
+            </div>
+          </div>
+          <form id="helpdesk-popup-footer" class="message-input-container mt-6" [formGroup]="chatForm">
+            <input
+              formControlName="message"
+              type="text"
+              id="helpdesk-popup-input"
+              [disabled]="isOption"
+              autocomplete="off"
+              placeholder="Type your message here..."
+            />
+            <button
+              id="helpdesk-popup-submit-button"
+              [disabled]="!chatForm.valid"
+              (click)="sendMessage()"
+            >
+              Send
+            </button>
+            <!-- <div class="message-input-container">
+                <input
+              formControlName="message"
+              type="text"
+              id="helpdesk-popup-input"
+              [disabled]="isOption"
+              autocomplete="off"
+              placeholder="Type your message here..."
+            />
+                <button pButton icon="pi pi-send" id="helpdesk-popup-submit-button" (click)="sendMessage()"  [disabled]="!chatForm.valid"></button>
+              </div> -->
+          </form>
+        </div>
+      
+</div>
+  </div>
+</div>

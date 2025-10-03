@@ -1,0 +1,585 @@
+<span>
+    <div
+      class="mb-3 pt-3 flex align-items-center justify-content-between flex-wrap"
+    >
+      <!-- Breadcrumb and Title -->
+      <div class="breadcrumb-container">
+        <i
+          class="pi pi-home cursor-pointer"
+          [routerLink]="['/admin/admin-dashboard']"
+        ></i>
+        <i class="pi pi-chevron-right mx-2"></i>
+        <span class="title font-bold">Change Management</span>
+      </div>
+  
+      <!-- Buttons Container -->
+      <div
+        class="button-group flex align-items-center justify-content-end flex-wrap mt-2 md:mt-0"
+      >
+      <div class="badge-button-container">
+        <p-button
+        label="Approval Requests"
+        icon="pi pi-check-circle"
+        routerLink="/admin/change-management/Request"
+        severity="secondary"
+        class="mr-4 mb-2 md:mb-0 badge-button"
+    >
+    </p-button>
+    <p-badge [value]="aprrovalCount"  class="badge-count"/>
+      </div>
+        <!-- Add Asset Button -->
+    
+
+        <!-- Add Change Request Button -->
+        <p-button
+          label="New Change Request"
+          icon="pi pi-plus"
+          (click)="openDialogue()"
+          severity="primary"
+          class="mr-2 mb-2 md:mb-0"
+          *ngIf="this.currentRole=='ITSupport Admin'" 
+        ></p-button>
+      </div>
+    </div>
+    <app-dynamic-table  [data]="ChangeManagementData"   [showEditButton]="this.currentRole=='ITSupport Admin'"  [showViewButton]=true [columns]="columns" (viewClicked)="openChangeReqDetails($event)"  (editClicked)="openEditDialogue($event)" #dynamictable></app-dynamic-table>
+
+  </span>
+  
+  <!-- Edit and add user management dialog -->
+  <p-dialog
+  [(visible)]="changeReqDialouge"
+  [style]="{ width: '70%', maxWidth: '900px' }"
+  [closable]="false"
+  [modal]="true"
+  styleClass="p-fluid"
+  appendTo="body"
+>
+  <p-header class="font-medium" *ngIf="!editChangeReqID">New Change Request</p-header>
+  <p-header class="font-medium" *ngIf="editChangeReqID">Update Change Request</p-header>
+  <ng-template pTemplate="content">
+    <div class="formgrid grid mt-2">
+      <form [formGroup]="RequestFormData" class="grid gap-2">
+        <!-- Name Fields Group -->
+        <div class="col-12 md:col-12 lg:col-12">
+          <p-fieldset legend="Change Request Information" [toggleable]="true">
+            <div class="grid">
+              <div class="col-12 md:col-4 my-3 p-float-label">
+                <input
+                  pInputText
+                  id="risk_assessment"
+                  formControlName="risk_assessment"
+                />
+                <label for="risk_assessment"
+                  >Risk Assessment<span class="required-asterisk">*</span
+                ></label>
+              </div>
+
+              <div class="col-12 md:col-4 my-3 p-float-label">
+                <p-dropdown
+                appendTo="body"
+                  formControlName="affected_product_id"
+                  [options]="assetTypes"
+                  optionLabel="ci_name"
+                  optionValue="ci_id"
+                  placeholder="Select Affected Configuration Items"
+                  
+                >
+                </p-dropdown>
+                <label for="affected_product_id">Affected Product<span class="required-asterisk">*</span
+                ></label>
+              </div>
+
+              <div class="col-12 md:col-4 my-3 p-float-label">
+                <p-dropdown
+                  formControlName="change_type_id"
+                  [options]="changeTypes"
+                  optionLabel="change_type"
+                  optionValue="id"
+                  placeholder="Select Change Type"
+                  appendTo="body"
+                >
+                </p-dropdown>
+                <label for="change_type_id"
+                  >Change Type<span class="required-asterisk">*</span
+                ></label>
+              </div>
+
+              <div class="col-12 md:col-4 my-3 p-float-label">
+                <p-dropdown
+                  formControlName="priority_id"
+                  [options]="priorities"
+                  optionLabel="priority_name"
+                  optionValue="priority_id"
+                  placeholder="Select Priority"
+                  appendTo="body"
+                >
+                </p-dropdown>
+                <label for="priority_id"
+                  >Priority<span class="required-asterisk">*</span></label
+                >
+              </div>
+
+              <div class="col-12 md:col-4 my-3 p-float-label">
+                <p-dropdown
+                [readonly]="!editChangeReqID"
+                  formControlName="status_id"
+                  [options]="statuses"
+                  optionLabel="status_name"
+                  optionValue="id"
+                  placeholder="Select Status"
+                  appendTo="body"
+                >
+                </p-dropdown>
+                <label for="status_id"
+                  >Status<span class="required-asterisk">*</span></label>
+              </div>
+
+              
+              <div class="col-12 md:col-4 my-3 p-float-label">
+                <p-dropdown
+                  formControlName="impact_id"
+                  [options]="impactList"
+                  optionLabel="impact_level"
+                  optionValue="impact_id"
+                  placeholder="Select Impact"
+                  appendTo="body"
+                >
+                </p-dropdown>
+                <label for="impact_id"
+                  >Impact<span class="required-asterisk">*</span></label>
+              </div>
+              <!-- <div class="col-12 md:col-4 my-3 p-float-label">
+                <input pInputText id="impact" formControlName="impact" />
+                <label for="impact"
+                  >Impact<span class="required-asterisk">*</span></label
+                >
+              </div> -->
+
+              <div class="col-12 md:col-12 my-3 p-float-label">
+                <textarea
+                  rows="3"
+                  cols="30"
+                  pInputTextarea
+                  formControlName="description"
+                ></textarea>
+                <label for="description">Change Request Description</label>
+              </div>
+            </div>
+          </p-fieldset>
+        </div>
+
+        <div class="col-12 md:col-12 lg:col-12">
+          <p-fieldset legend="Planning Details" [toggleable]="true">
+            <div class="grid">
+              <div class="col-12 md:col-4 my-3 p-float-label">
+                <input
+                  pInputText
+                  id="implementation_plan"
+                  formControlName="implementation_plan"
+                />
+                <label for="implementation_plan"
+                  >Implementation Plan<span class="required-asterisk">*</span
+                ></label>
+              </div>
+
+              <div class="col-12 md:col-4 my-3 p-float-label">
+                <p-calendar
+                  formControlName="scheduled_start_date"
+                  [showIcon]="true"
+                  [dateFormat]="dateFormat"
+                  appendTo="body"
+                  [showClear]="true"
+                  [minDate]="minDate"
+                ></p-calendar>
+                <label for="scheduled_start_date"
+                  >Scheduled Start Date:</label>
+              </div>
+
+              <div class="col-12 md:col-4 my-3 p-float-label">
+                <p-calendar
+                  formControlName="scheduled_end_date"
+                  [showIcon]="true"
+                  [dateFormat]="dateFormat"
+                  appendTo="body"
+                  [showClear]="true"
+                  [minDate]="minDate"
+                ></p-calendar>
+                <label for="scheduled_end_date"
+                  >Scheduled End Date:</label>
+              </div>
+            </div>
+          </p-fieldset>
+        </div>
+
+        <div class="col-12 md:col-12 lg:col-12">
+          <p-fieldset legend="Approval Details" [toggleable]="true">
+
+            <div class="grid">
+            <div class="col-12 md:col-8 my-3 p-float-label">
+              <p-multiSelect
+              appendTo="body"
+                formControlName="approver_ids"
+                [options]="approver"
+                optionLabel="full_name"
+                optionValue="user_id"
+                placeholder="Select Approver"
+                [filter]="true"
+              >
+              </p-multiSelect>
+              <label for="approver_ids"
+                >Approver:<span class="required-asterisk">*</span
+              ></label>
+            </div>
+
+            <div class="col-12 md:col-4 my-3 p-float-label">
+              <p-calendar
+                formControlName="review_date"
+                [showIcon]="true"
+                [dateFormat]="dateFormat"
+                appendTo="body"
+                [showClear]="true"
+                [minDate]="minDate"
+              ></p-calendar>
+              <label for="review_date"
+                >Review Date:</label>
+            </div>
+
+            <div class="col-12 md:col-4 my-3 p-float-label">
+              <p-dropdown
+                formControlName="assigned_to_id"
+                [options]="AsignToList"
+                optionLabel="full_name"
+                optionValue="user_id"
+                placeholder="Select Impact"
+                appendTo="body"
+              >
+              </p-dropdown>
+              <label for="impact_id"
+                >Assign To:<span class="required-asterisk">*</span></label>
+            </div>
+          </div>
+          </p-fieldset>
+        </div>
+
+        <div class="col-12 md:col-12 lg:col-12">
+          <p-fieldset legend="Attachments And Notes" [toggleable]="true">
+            <div class="grid">
+              <div class="col-12 md:col-12 my-3">
+                <ul class="file-list"  *ngFor="let fileName of selectedFileNames; let i = index">
+                  <li  class="file-item">
+                    {{ fileName.name }} 
+                    <button type="button" class="clear-btn" (click)="removeFile(i,fileName.attachment_id)">
+                      <i class="pi pi-times"></i>
+                    </button>
+                  </li>
+                </ul>
+                <div class="file-input-container">
+                  <p-button
+                    icon="pi pi-paperclip"
+                    label="Attach Files"
+                    (click)="fileInput.click()"
+                    styleClass="p-button-outlined"
+                  ></p-button>
+                  <input
+                    type="file"
+                    #fileInput
+                    style="display: none;"
+                    (change)="onFileSelect($event)"
+                    multiple
+                  />
+                  <!-- <p-button
+                    label="Clear All"
+                    styleClass="p-button-danger ml-2"
+                    (click)="clearAllFiles()"
+                    *ngIf="selectedFileNames.length > 0"
+                  ></p-button> -->
+                </div>
+              </div>
+              
+              
+
+              <div   *ngIf="editChangeReqID "  class="col-12 md:col-12 my-3 p-float-label">
+                <textarea
+                  rows="5"
+                  cols="30"
+                  pInputTextarea
+                  readonly
+                  formControlName="prev_notes"
+                ></textarea>
+                <label for="description">Previous Log Note</label>
+              </div>
+              
+              <div   *ngIf="editChangeReqID" class="col-12 md:col-12 my-3 p-float-label">
+                <textarea
+                  rows="5"
+                  cols="30"
+                  pInputTextarea
+                  formControlName="log_notes"
+                ></textarea>
+                <label for="description">Log Note</label>
+              </div>
+
+            </div>
+          </p-fieldset>
+        </div>
+      </form>
+    </div>
+  </ng-template>
+
+  <ng-template pTemplate="footer">
+    <p-button
+      class="mr-4"
+      icon="pi pi-times"
+      label="Cancel"
+      size="small"
+      severity="secondary"
+      (click)="changeReqDialouge = false"
+    ></p-button>
+    <p-button
+      icon="pi pi-check"
+      label="Save"
+      [loading]="isLoading"
+      size="small"
+      severity="primary"
+      *ngIf="!editChangeReqID"
+      (click)="submitChangeReq()"
+      [disabled]="RequestFormData.invalid"
+    ></p-button>
+    <p-button
+      icon="pi pi-check"
+      label="Update"
+      size="small"
+      severity="primary"
+      [loading]="isLoading"
+      *ngIf="editChangeReqID"
+      (click)="onUpdate()"
+      [disabled]="RequestFormData.invalid"
+    ></p-button>
+  </ng-template>
+</p-dialog>
+
+<p-dialog
+  header="Change Management Details"
+  [(visible)]="changeManagementDialog"
+  [modal]="true"
+  [maximizable]="true"
+  [responsive]="true"
+  [closable]="false"
+  [style]="{ width: '1000px' }"
+  class="change-management-dialog"
+>
+  <ng-template pTemplate="content">
+    <div class="change-details-container">
+
+      <!-- Title Section -->
+      <div class="details-header">
+        <h3 class="page-title">Change Management Overview
+
+          <button pButton label="Conversation"  icon="pi pi-comments" class="absolute btn-chat right-0 mr-5"   (click)="showChatDialog()"></button>
+        </h3>
+      </div>
+
+      <!-- Card-based Detail Sections -->
+      <div class="detail-card">
+        <h4 class="card-title"><i class="pi pi-cog"></i> Change Information</h4>
+
+        <div class="details-row">
+          <strong>ID: <span class="mx-2"> <u>{{ changeDetails?.id || '--' }} </u></span> </strong>
+          <!-- <span>{{ changeDetails?.affected_product_name || '--' }}</span> -->
+        </div>
+        <div class="details-row">
+          <strong>Affected Product:</strong>
+          <span>{{ changeDetails?.affected_product_name || '--' }}</span>
+        </div>
+        <div class="details-row">
+          <strong>Change Type:</strong>
+          <span>{{ changeDetails?.change_type || '--' }}</span>
+        </div>
+        <div class="details-row">
+          <strong>Impact:</strong>
+          <span>{{ changeDetails?.impact_level || '--' }}</span>
+        </div>
+        <div class="details-row">
+          <strong>Priority:</strong>
+          <span>{{ changeDetails?.priority_name || '--' }}</span>
+        </div>
+        
+        <div class="details-row">
+          <strong>Assigned To:</strong>
+          <span>{{ changeDetails?.assigned_to_username || '--' }}</span>
+        </div>
+        <div class="details-row">
+          <strong>Implementation Plan:</strong>
+          <span>{{ changeDetails?.implementation_plan || '--' }}</span>
+        </div>
+      </div>
+
+      <div class="detail-card">
+        <h4 class="card-title"><i class="pi pi-calendar"></i> Scheduling & Status</h4>
+        <div class="details-row">
+            <strong>Status:</strong>
+            <span class="status-label" [ngClass]="getStatusClass(changeDetails?.status_name)">
+              {{ changeDetails?.status_name || '--' }}
+            </span>
+          </div>
+        <div class="details-row">
+          <strong>Scheduled Start Date:</strong>
+          <span>{{ changeDetails?.scheduled_start_date ? (changeDetails?.scheduled_start_date ) : '--' }}</span>
+        </div>
+        <div class="details-row">
+          <strong>Scheduled End Date:</strong>
+          <span>{{ changeDetails?.scheduled_end_date ? (changeDetails?.scheduled_end_date) : '--' }}</span>
+        </div>
+        <div class="details-row">
+          <strong>Review  Date:</strong>
+          <span>{{ changeDetails?.review_date ? (changeDetails?.scheduled_end_date) : '--' }}</span>
+        </div>
+      </div>
+
+      <div class="detail-card p-card">
+        <h4 class="card-title">
+          <i class="pi pi-user"></i> Approver Information
+        </h4>
+      
+        <div *ngIf="changeDetails?.approvers && changeDetails.approvers.length > 0; else noApprovers">
+          <div *ngFor="let approver of changeDetails.approvers" class="p-grid p-align-center">
+            <div class="p-col-12">
+              <!-- Use flexbox to align Approver Name on the left and Status on the right -->
+              <div class="p-grid" style="display: flex; justify-content:  space-between; align-items: center;">
+                
+                <!-- Approver Name on the Left -->
+                <div>
+                  <strong>Approver Name:</strong>
+                  <span>{{ approver.approver_name || '--' }}</span>
+                </div>
+                
+                <!-- Approval Status on the Right -->
+                <div>
+                  <span *ngIf="approver.approval_state === 'Approved'"
+                    class="pi pi-check-circle px-2 icon-success text-green-600"
+                    pTooltip="Approved"
+                    tooltipPosition="top">
+                  </span>
+          
+                  <span *ngIf="approver.approval_state === 'Rejected'"
+                    class="pi pi-times-circle icon-rejected text-red-600"
+                    pTooltip="Rejected"
+                    tooltipPosition="top">
+                  </span>
+          
+                  <span>{{ approver.approval_state || 'Pending' }}</span>
+                </div>
+                
+              </div>
+            </div>
+          
+            <!-- Reason Field Below (if needed) -->
+            <div class="p-col-12 mb-3">
+              <strong>Reason:</strong>
+              <span>{{ approver.approver_reason_to_reject || '--' }}</span>
+            </div>
+          </div>
+          
+          
+        </div>
+      
+        <ng-template #noApprovers>
+          <div class="details-row">
+            <strong>No Approvers Available</strong>
+          </div>
+        </ng-template>
+      </div>
+      
+
+      <div class="detail-card">
+        <h4 class="card-title"><i class="pi pi-align-left"></i> Description</h4>
+        <div class="details-row">
+            <p>{{ changeDetails?.description || '--' }}</p>
+        </div>
+    
+        <div class="card-header d-flex align-items-center">
+          <h4 class="card-title mb-0 me-2"><i class="pi pi-paperclip"></i> Attachments</h4>
+      </div>
+      <div class="card-body">
+          <div *ngIf="changeDetails?.attachment && changeDetails.attachment.length > 0; else noAttachments">
+              <table class="table table-bordered">
+                  <thead>
+                      <tr>
+                          <th>File Name</th>
+                          <th>Actions</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      <tr *ngFor="let attachment of changeDetails.attachment;let i = index">
+                          <td>
+                             {{i+1}}. {{ attachment.file_path.split('/').pop() }} <!-- Display file name -->
+                          </td>
+                          <td>
+                              <i class="pi pi-eye text-primary mx-2" pTooltip="View" style="cursor: pointer;" (click)="openAttachment(attachment.file_path)" title="View Attachment"></i>
+                              <i class="pi pi-download text-success ms-2 mx-2" pTooltip="Download" style="cursor: pointer;" (click)="downloadAttachment(attachment.file_path)" title="Download Attachment"></i>
+                          </td>
+                      </tr>
+                  </tbody>
+              </table>
+          </div>
+          <ng-template #noAttachments>
+              <p class="text-muted">No attachments available</p>
+          </ng-template>
+      </div>
+      
+    </div>
+    
+    
+
+
+    </div>
+  </ng-template>
+
+  <ng-template pTemplate="footer">
+    <button type="button" pButton label="Close" icon="pi pi-times" (click)="changeManagementDialog=false" class="p-button-secondary"></button>
+  </ng-template>
+</p-dialog>
+
+
+<p-dialog
+  [(visible)]="chatDialogVisible"
+  [position]="'bottomright'"
+  [modal]="true"
+  
+  [closable]="false"
+  [style]="{ width: '400px' }"
+>
+<ng-template pTemplate="header">
+  <i class="pi pi-comments" style="margin-right: 8px;"></i> Conversation
+</ng-template>
+  <form [formGroup]="chatForm">
+    <div class="chat-window">
+      <div class="message-list">
+        <div
+          *ngFor="let message of messages"
+          class="message"
+          [ngClass]="{ 'you-message': message.sender === 'You', 'other-message': message.sender !== 'You' }"
+        >
+          <div class="message-sender">
+            <strong>{{ message.sender }}:</strong>
+          </div>
+          <div class="message-text">
+            {{ message.text }}
+          </div>
+        </div>
+      </div>
+      <div class="input-area">
+        <button pButton label="Close" class="p-button-secondary" (click)="closeChat()"></button>
+        <input
+          type="text"
+          formControlName="message"
+          placeholder="Type a message"
+          (keydown.enter)="sendMessage()"
+        />
+        <button pButton label="Send" (click)="sendMessage()"></button>
+      </div>
+    </div>
+  </form>
+</p-dialog>
+
+

@@ -1,0 +1,99 @@
+<div class="mb-3 pt-3 flex align-items-center justify-content-between">
+  <!-- Breadcrumb and Title -->
+ <!-- Breadcrumb and Title -->
+ <div class="breadcrumb-container">
+  <i class="pi pi-home cursor-pointer" [routerLink]="['/admin/admin-dashboard']"></i>
+  <i class="pi pi-chevron-right mx-2"></i>
+  <span class="title font-bold">Service Master</span>
+</div>
+
+<!-- Add Button -->
+<p-button label="Add " icon="pi pi-plus" (click)="openDialouge()" severity="primary"></p-button>
+</div>
+
+ 
+
+
+<!-- <div>
+
+</div> -->
+
+<app-dynamic-table [data]="ServiceListData" [columns]="columns" (editClicked)="openEditDialogue($event)" #dynamictable></app-dynamic-table>
+
+<p-dialog [(visible)]="serviceDialouge" [style]="{ width: '50%',height:'300px' }" [closable]="false" [modal]="true" styleClass="p-fluid" appendTo="body">
+  
+      <p-header class="font-medium"  *ngIf="!editUserId" >New Service</p-header>
+      <p-header class="font-medium"  *ngIf="editUserId" >Update Service</p-header>
+      <ng-template pTemplate="content">
+        <div class="formgrid mt-2">
+          <form [formGroup]="serviceFormData">
+            <!-- CI Details -->
+            <div class="col-12">
+              <p-fieldset legend="Details" [toggleable]="true" styleClass="w-full">
+                <div class="grid">    
+                  <div class="col-12 md:col-6 my-3 p-float-label">
+                    <input pInputText id="service_id" formControlName="service_name" />
+                    <label for="service_id">Service Name <span class="required-asterisk">*</span></label>
+                  </div>
+    
+                  <div class="col-12 md:col-6 my-3 p-float-label">
+                    <p-dropdown id="departments_id" [options]="departmentList" formControlName="department_id" optionValue="dept_id" optionLabel="department" placeholder="Select a Department" appendTo="body">
+                      <ng-template pTemplate="header">
+                        <div class="p-text-center text-center my-1">
+                          <p-button  type="button" label="Add New " (click)="departmentDialouge()" icon="pi pi-plus" 
+                                 ></p-button>
+                        </div>
+                      </ng-template>
+
+                    </p-dropdown>
+                   
+
+                    <label for="departments_id"> Department <span class="required-asterisk">*</span></label>
+                  </div>
+
+                  <p-dialog [(visible)]="addDeptDialog" [style]="{ width: '30%'}" [closable]="false" [modal]="true" styleClass="p-fluid" appendTo="body">
+  
+                    <p-header class="font-medium">New Department</p-header>
+                    <ng-template pTemplate="content">
+                      <div class="formgrid mt-2">
+                        <form [formGroup]="departmentFormData">
+                          <!-- CI Details -->
+                          <div class="col-12">
+                            <!-- <p-fieldset legend="Details" [toggleable]="true" styleClass="w-full"> -->
+                              <div class="grid">    
+                                <div class="col-12 md:col-12  p-float-label">
+                                  <input pInputText id="department_name" formControlName="department_name" />
+                                  <label for="department_name">Add Department <span class="required-asterisk">*</span></label>
+                                </div>
+                  
+                              
+                              </div>
+                            <!-- </p-fieldset> -->
+                          </div>
+                        </form>
+                      </div>
+                    </ng-template>
+                  
+                    <ng-template pTemplate="footer">
+                      <p-button class="mr-4" icon="pi pi-times" label="Cancel" size="small" severity="secondary" (click)="addDeptDialog=false"></p-button>
+                      <p-button icon="pi pi-check" label="Add" size="small" severity="primary" [disabled]="departmentFormData.invalid" (click)="addDepartment()"  ></p-button>
+                    
+                    </ng-template>
+                  </p-dialog>
+                  
+    
+               
+                </div>
+              </p-fieldset>
+            </div>
+          </form>
+        </div>
+      </ng-template>
+    
+      <ng-template pTemplate="footer">
+        <p-button class="mr-4" icon="pi pi-times" label="Cancel" size="small" severity="secondary" (click)="serviceDialouge=false"></p-button>
+        <p-button icon="pi pi-check" label="Save" size="small" severity="primary" *ngIf="!editUserId"  (click)="onSubmit()"></p-button>
+        <p-button icon="pi pi-check" label="Update" size="small" severity="primary" *ngIf="editUserId"   (click)="onUpdate()"></p-button>
+      </ng-template>
+    </p-dialog>
+    

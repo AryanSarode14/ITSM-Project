@@ -1,0 +1,183 @@
+.main-container {
+    display: flex;
+    flex-direction: column; /* Stack items vertically */
+    justify-content: center; /* Center vertically */
+    align-items: center; /* Center horizontally */
+    // height: 100vh; /* Full height of the viewport */
+    background: linear-gradient(to right, #001f3f, #3a99e0); /* Navy blue to light blue gradient */
+    padding: 20px;
+    border-radius: 20px;
+  }
+  
+  .profile-card {
+    width: 350px; /* Fixed width for the profile card */
+    border-radius: 16px;
+    background: #ffffff69; /* White background for the card */
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    // margin-top: 20px; /* Space between the button and card */
+  }
+  
+  .edit-user-button {
+    background-color: #007bff; /* Button color */
+    color: white; /* Text color */
+    border: none;
+    border-radius: 4px;
+    padding: 10px 15px;
+    font-size: 1em;
+    cursor: pointer;
+    display: flex;
+    align-items: center; /* Center icon and text */
+    margin-bottom: 20px; /* Space below the button */
+    transition: background-color 0.3s;
+  }
+  
+  .edit-user-button:hover {
+    background-color: #0056b3; /* Darker color on hover */
+  }
+  
+  .profile-pic-container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+    background: #ffffff69;
+  }
+  
+  .profile-pic {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    object-fit: cover;
+    transition: transform 0.2s;
+  }
+  
+  .profile-pic:hover {
+    transform: scale(1.05);
+  }
+  
+  .edit-button-container {
+    position: absolute;
+    bottom: 0;
+    right: 70px;
+  }
+  
+  .edit-button {
+    background-color: #007bffb8;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    transition: background-color 0.3s;
+  }
+  
+  .edit-button:hover {
+    background-color: rgb(4 40 75);
+  }
+  
+  .user-name-container {
+    text-align: center;
+    margin: 10px 0;
+  }
+  
+  .user-name-container h2 {
+    margin: 0;
+    font-size: 1.5em;
+    color: #001f3f; /* Navy blue color for the name */
+  }
+  
+  .user-id {
+    font-size: 0.9em;
+    color: #666; /* Grey color for the email ID */
+  }
+  
+  .user-info {
+    margin-top: 20px;
+  }
+
+  .user-info p{
+    margin: 0 !important;
+  }
+
+  .p-card{
+    background:#ffffff69 !important;
+  }
+  
+  .p-field {
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .p-field label {
+    font-weight: bold;
+    color: #001f3f; /* Navy blue color for the labels */
+  }
+
+  .edit-user-button {
+    background-color: rgba(38, 143, 255, 0.5); /* Green background */
+    border: none;
+    border-radius: 10px; /* Rounded edges */
+    padding: 12px 24px; /* Increased padding for better size */
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Soft shadow */
+    transition: background-color 0.3s, transform 0.3s; /* Smooth transitions */
+    color: white; /* Text color */
+    font-weight: bold; /* Bold text */
+    font-size: 16px; /* Slightly larger font size */
+}
+
+.edit-user-button i {
+    margin-right: 8px; /* Space between icon and text */
+    font-size: 1.2em; /* Slightly larger icon */
+}
+
+.edit-user-button:hover {
+    background-color: #052a4d; /* Darker shade on hover */
+    transform: scale(1.05); /* Slightly increase size on hover */
+}
+
+/* Fade In Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px); /* Start slightly lower */
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0); /* Move to original position */
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease-in-out; /* Adjust duration and timing */
+}
+
+/* Optional: Dialog Animation */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px); /* Start slightly above */
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0); /* Move to original position */
+  }
+}
+
+.dialog-slide-in {
+  animation: slideIn 0.5s ease-in-out;
+}
+
+
+  

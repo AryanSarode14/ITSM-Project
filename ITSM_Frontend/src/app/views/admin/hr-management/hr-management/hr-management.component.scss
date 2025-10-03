@@ -1,0 +1,77 @@
+// /* Custom styles for the tab headers */
+// .custom-tabview .tab-header {
+//   display: flex;
+//   align-items: center;
+//   flex-wrap: wrap; /* Ensure headers wrap properly */
+// }
+
+// .custom-tabview .tab-header i {
+//   font-size: 1.2rem;
+//   margin-right: 0.5rem;
+// }
+
+// .custom-tabview .tab-header span {
+//   font-size: 14px;
+// }
+
+// /* Style for the tab view navigation */
+// .p-tabview .p-tabview-nav {
+//   border: none;
+// }
+
+// .p-tabview .p-tabview-nav .p-tabview-title {
+//   padding: 0.5rem;
+//   transition: background-color 0.3s, color 0.3s; /* Smooth transition for hover effect */
+// }
+
+// :host::ng-deep .p-tabview .p-tabview-nav li .p-tabview-nav-link {
+//   border: none;
+
+// }
+
+// :host::ng-deep .p-tabview .p-tabview-nav li.p-highlight .p-tabview-nav-link {
+//   // background: #ffffff;
+//   border: none;
+//   // border-color: #dee2e6 #dee2e6 #ffffff #dee2e6;
+//   color: #fcfcfc !important;
+//   background-color: #20215ee5 !important;
+//   border-top-right-radius: 114px;
+//   border-bottom-left-radius:76px;
+
+// }
+
+
+
+/* Media queries for mobile responsiveness */
+@media (max-width: 768px) {
+  :host::ng-deep  .p-tabview .p-tabview-nav li.p-highlight .p-tabview-nav-link {
+    border: none;
+    color: #fcfcfc !important;
+    background-color: rgba(32, 33, 94, 0.8980392157) !important;
+    border-top-right-radius: 13px;
+    border-bottom-left-radius: 36px;
+}
+  .custom-tabview .tab-header {
+    flex-direction: column; /* Stack icon and text vertically */
+    text-align: center; /* Center-align text */
+  }
+
+  .custom-tabview .tab-header i {
+    font-size: 1rem; /* Adjust icon size for smaller screens */
+    margin-bottom: 0.5rem; /* Space between icon and text */
+  }
+
+  .custom-tabview .tab-header span {
+    font-size: 12px; /* Smaller font size for mobile */
+  }
+
+  .p-tabview .p-tabview-nav {
+    flex-direction: column; /* Stack tabs vertically */
+  }
+
+  .p-tabview .p-tabview-nav .p-tabview-title {
+    padding: 0.5rem 1rem; /* Adjust padding for better touch targets */
+  }
+}
+
+

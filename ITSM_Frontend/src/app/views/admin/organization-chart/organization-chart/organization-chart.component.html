@@ -1,0 +1,85 @@
+<span>
+  <div   class="mb-3 pt-3 flex align-items-center justify-content-between">
+    <!-- Breadcrumb and Title -->
+    <div class="breadcrumb-container">
+      <i class="pi pi-home cursor-pointer" [routerLink]="['/admin/admin-dashboard']"></i>
+      <i class="pi pi-chevron-right mx-2"></i>
+      <span class="title font-bold">Organization Chart</span>
+    </div>
+
+  </div>
+
+</span>
+
+<p-organizationChart [value]="data" styleClass="company-organization">
+    <ng-template let-node pTemplate="person">
+      <div
+        class="p-organizationchart-node-content p-person"
+        [ngStyle]="{
+          'background-image': getCardBackgroundColor(node.data.title),
+          'color': '#FFFFFF'
+        }"
+        [@cardAnimation]="node.data.id === activeCardId ? 'active' : 'inactive'"
+        (click)="openDialog(node)"
+     
+      >
+      <img
+      [src]="node.data.image ? node.data.image : 'https://w7.pngwing.com/pngs/831/88/png-transparent-user-profile-computer-icons-user-interface-mystique-miscellaneous-user-interface-design-smile-thumbnail.png'"
+      alt="User Profile"
+      class="profile-image"
+    />
+    
+
+        <div class="person-info">
+          <div class="person-name">{{ node.data.name }}</div>
+          <div class="person-title">{{ node.data.title }}</div>
+        </div>
+        <!-- <button
+          (click)="openDialog(node)"
+          pButton
+          type="button"
+          icon="pi pi-search"
+          label="View Profile"
+          class="profile-button"
+        ></button> -->
+      </div>
+    </ng-template>
+  </p-organizationChart>
+  
+  <!-- Dialog Box with Animation -->
+  <p-dialog
+    header="Card Details"
+    [(visible)]="displayDialog"
+    [modal]="true"
+    [closable]="false"
+    [style]="{ width: '400px' }"
+    [contentStyle]="{ 'animation': 'fadeIn 0.4s ease-out' }"
+    [@dialogAnimation]
+    (onHide)="closeDialog()"
+  >
+    <div *ngIf="selectedCardData" class="dialog-content">
+      <div class="dialog-image-container">
+        <img
+        [src]="selectedCardData.image ? selectedCardData.image : 'https://w7.pngwing.com/pngs/831/88/png-transparent-user-profile-computer-icons-user-interface-mystique-miscellaneous-user-interface-design-smile-thumbnail.png'"
+        alt="User Profile"
+          class="dialog-profile-image"
+        />
+      </div>
+      <div class="dialog-info">
+        <div><strong>Name:</strong> {{ selectedCardData.name }}</div>
+        <div><strong>Title:</strong> {{ selectedCardData.title }}</div>
+        <div><strong>Gender:</strong> {{ selectedCardData.gender }}</div>
+        <div><strong>Support Group:</strong>{{selectedCardData.supportGroup}}</div>
+        <div><strong>Email:</strong>{{ selectedCardData.email_id }} </div>
+        <div><strong>Contact:</strong>{{ selectedCardData.mobile_no }} </div>
+        <!-- Add more fields here as needed -->
+      </div>
+
+    </div>
+    <ng-template pTemplate="footer">
+      <p-button class="" icon="pi pi-times" label="Close" size="small" severity="secondary" (click)="displayDialog=false"></p-button>
+      
+    </ng-template>
+    
+  </p-dialog>
+  
